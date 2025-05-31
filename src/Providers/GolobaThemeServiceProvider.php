@@ -1,6 +1,6 @@
 <?php
 
-namespace Goloba\GolobaTheme\Providers;
+namespace Webkul\GolobaTheme\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
@@ -14,6 +14,9 @@ class GolobaThemeServiceProvider extends ServiceProvider
     public function boot()
     {
         // Service provider code will be added here
+        $this->publishes([
+        __DIR__.'/../Resources/views'  => resource_path('themes/goloba-theme/views'),
+    ]);
     }
 
     /**
