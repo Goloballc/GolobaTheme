@@ -24,9 +24,9 @@ export default defineConfig(({ mode }) => {
             vue(),
 
             laravel({
-                hotFile: "../../../public/golobatheme-default-vite.hot",
+                hotFile: "../../../public/shop-goloba-theme-vite.hot",
                 publicDirectory: "../../../public",
-                buildDirectory: "themes/golobatheme/default/build",
+                buildDirectory: "themes/shop/goloba-theme/build",
                 input: [
                     "src/Resources/assets/css/app.css",
                     "src/Resources/assets/js/app.js",
