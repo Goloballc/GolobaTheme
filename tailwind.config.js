@@ -34,6 +34,9 @@ module.exports = {
                 darkGreen: '#40994A',
                 darkBlue: '#0044F2',
                 darkPink: '#F85156',
+                greenGoloba: '#B4D241',
+                pinkGoloba: '#B12C9E',
+                grayGoloba: '#706F6F',
             },
 
             fontFamily: {
