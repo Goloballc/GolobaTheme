@@ -1,11 +1,7 @@
 {!! view_render_event('bagisto.shop.components.layouts.header.desktop.bottom.before') !!}
 
 <div class="flex min-h-[78px] w-full justify-between border border-b border-l-0 border-r-0 border-t-0 px-[60px] max-1180:px-8">
-    <!--
-        This section will provide categories for the first, second, and third levels. If
-        additional levels are required, users can customize them according to their needs.
-    -->
-    <!-- Left Nagivation Section -->
+    <!-- Left Navigation Section -->
     <div class="flex items-center gap-x-10 max-[1180px]:gap-x-5">
         {!! view_render_event('bagisto.shop.components.layouts.header.desktop.bottom.logo.before') !!}
 
@@ -26,30 +22,14 @@
         {!! view_render_event('bagisto.shop.components.layouts.header.desktop.bottom.category.before') !!}
 
         <v-desktop-category>
-            <div class="flex items-center gap-5">
-                <span
-                    class="shimmer h-6 w-20 rounded"
-                    role="presentation"
-                ></span>
-
-                <span
-                    class="shimmer h-6 w-20 rounded"
-                    role="presentation"
-                ></span>
-
-                <span
-                    class="shimmer h-6 w-20 rounded"
-                    role="presentation"
-                ></span>
-            </div>
+            <div class="shimmer h-6 w-24 rounded" role="presentation"></div>
         </v-desktop-category>
 
         {!! view_render_event('bagisto.shop.components.layouts.header.desktop.bottom.category.after') !!}
     </div>
 
-    <!-- Right Nagivation Section -->
+    <!-- Right Navigation Section -->
     <div class="flex items-center gap-x-9 max-[1100px]:gap-x-6 max-lg:gap-x-8">
-
         {!! view_render_event('bagisto.shop.components.layouts.header.desktop.bottom.search_bar.before') !!}
 
         <!-- Search Bar Container -->
@@ -99,7 +79,6 @@
 
         <!-- Right Navigation Links -->
         <div class="mt-1.5 flex gap-x-8 max-[1100px]:gap-x-6 max-lg:gap-x-8">
-
             {!! view_render_event('bagisto.shop.components.layouts.header.desktop.bottom.compare.before') !!}
 
             <!-- Compare -->
@@ -185,7 +164,7 @@
                     <x-slot:content class="!p-0">
                         <div class="grid gap-2.5 p-5 pb-0">
                             <p class="font-dmserif text-xl">
-                                @lang('shop::app.components.layouts.header.welcome')’
+                                @lang('shop::app.components.layouts.header.welcome')'
                                 {{ auth()->guard('customer')->user()->first_name }}
                             </p>
 
@@ -256,72 +235,100 @@
         id="v-desktop-category-template"
     >
         <div
-            class="flex items-center gap-5"
+            class="shimmer h-6 w-24 rounded"
+            role="presentation"
             v-if="isLoading"
-        >
-            <span
-                class="shimmer h-6 w-20 rounded"
-                role="presentation"
-            ></span>
-
-            <span
-                class="shimmer h-6 w-20 rounded"
-                role="presentation"
-            ></span>
-
-            <span
-                class="shimmer h-6 w-20 rounded"
-                role="presentation"
-            ></span>
-        </div>
+        ></div>
 
         <div
-            class="flex items-center"
+            class="relative"
             v-else
         >
-            <div
-                class="group relative flex h-[77px] items-center border-b-4 border-transparent hover:border-b-4 hover:border-navyBlue"
-                v-for="category in categories"
+            <!-- Categorías trigger -->
+            <div 
+                class="group relative flex h-[77px] items-center"
+                @mouseenter="showCategories = true"
+                @mouseleave="showCategories = false"
             >
-                <span>
-                    <a
-                        :href="category.url"
-                        class="inline-block px-5 uppercase"
-                    >
-                        @{{ category.name }}
-                    </a>
+                <span class="cursor-pointer px-5">
+                    Categorías
                 </span>
 
+                <!-- Mega Menu - Full Width -->
                 <div
-                    class="pointer-events-none absolute top-[78px] z-[1] max-h-[580px] w-max max-w-[1260px] translate-y-1 overflow-auto overflow-x-auto border border-b-0 border-l-0 border-r-0 border-t border-[#F3F3F3] bg-white p-9 opacity-0 shadow-[0_6px_6px_1px_rgba(0,0,0,.3)] transition duration-300 ease-out group-hover:pointer-events-auto group-hover:translate-y-0 group-hover:opacity-100 group-hover:duration-200 group-hover:ease-in ltr:-left-9 rtl:-right-9"
-                    v-if="category.children.length"
+                    v-show="showCategories"
+                    class="absolute top-[77px] left-0 z-[10] w-screen shadow-xl"
+                    :style="{ left: `-${menuLeftOffset}px` }"
                 >
-                    <div class="aigns flex justify-between gap-x-[70px]">
-                        <div
-                            class="grid w-full min-w-max max-w-[150px] flex-auto grid-cols-[1fr] content-start gap-5"
-                            v-for="pairCategoryChildren in pairCategoryChildren(category)"
-                        >
-                            <template v-for="secondLevelCategory in pairCategoryChildren">
-                                <p class="font-medium text-navyBlue">
-                                    <a :href="secondLevelCategory.url">
-                                        @{{ secondLevelCategory.name }}
-                                    </a>
-                                </p>
-
-                                <ul
-                                    class="grid grid-cols-[1fr] gap-3"
-                                    v-if="secondLevelCategory.children.length"
+                    <div class="flex">
+                        <!-- Panel Izquierdo - Lista de categorías de primer nivel -->
+                        <div class="w-64 bg-pinkGoloba text-white">
+                            <ul class="py-4">
+                                <li
+                                    v-for="(category, index) in categories"
+                                    :key="category.id"
+                                    @mouseenter="hoveredCategory = index"
+                                    class="relative"
                                 >
-                                    <li
-                                        class="text-sm font-medium text-zinc-500"
-                                        v-for="thirdLevelCategory in secondLevelCategory.children"
+                                    <a
+                                        :href="category.url"
+                                        class="block px-6 py-3 text-sm hover:bg-[#d81b60] transition-colors"
+                                        :class="{ 'bg-[#d81b60]': hoveredCategory === index }"
                                     >
-                                        <a :href="thirdLevelCategory.url">
-                                            @{{ thirdLevelCategory.name }}
+                                        @{{ category.name }}
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Panel Derecho - Subcategorías -->
+                        <div class="flex-1 bg-white p-8">
+                            <div v-if="hoveredCategory !== null && categories[hoveredCategory]">
+                                <!-- Título de la categoría principal -->
+                                <h3 class="text-xl font-bold text-black border-b-2 border-black pb-2 mb-6 inline-block">
+                                    @{{ categories[hoveredCategory].name }}
+                                </h3>
+
+                                <!-- Grid de subcategorías -->
+                                <div class="grid grid-cols-4 gap-8">
+                                    <div
+                                        v-for="secondLevel in categories[hoveredCategory].children"
+                                        :key="secondLevel.id"
+                                        class="space-y-2"
+                                    >
+                                        <!-- Segundo nivel - Título -->
+                                        <a
+                                            :href="secondLevel.url"
+                                            class="block text-base font-semibold text-gray-900 hover:text-[#e91e63] transition-colors"
+                                        >
+                                            @{{ secondLevel.name }}
                                         </a>
-                                    </li>
-                                </ul>
-                            </template>
+                                        
+                                        <!-- Tercer nivel - Items -->
+                                        <ul 
+                                            v-if="secondLevel.children.length > 0"
+                                            class="space-y-1"
+                                        >
+                                            <li
+                                                v-for="thirdLevel in secondLevel.children"
+                                                :key="thirdLevel.id"
+                                            >
+                                                <a
+                                                    :href="thirdLevel.url"
+                                                    class="block text-sm text-gray-600 hover:text-gray-900 transition-colors"
+                                                >
+                                                    @{{ thirdLevel.name }}
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Mensaje cuando no hay categoría seleccionada -->
+                            <div v-else class="text-gray-500 text-center py-8">
+                                <p>Selecciona una categoría para ver las subcategorías</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -334,15 +341,23 @@
             template: '#v-desktop-category-template',
 
             data() {
-                return  {
+                return {
                     isLoading: true,
-
                     categories: [],
+                    showCategories: false,
+                    hoveredCategory: null,
+                    menuLeftOffset: 0
                 }
             },
 
             mounted() {
                 this.get();
+                this.calculateMenuOffset();
+                window.addEventListener('resize', this.calculateMenuOffset);
+            },
+
+            beforeUnmount() {
+                window.removeEventListener('resize', this.calculateMenuOffset);
             },
 
             methods: {
@@ -350,23 +365,21 @@
                     this.$axios.get("{{ route('shop.api.categories.tree') }}")
                         .then(response => {
                             this.isLoading = false;
-
                             this.categories = response.data.data;
                         }).catch(error => {
                             console.log(error);
                         });
                 },
 
-                pairCategoryChildren(category) {
-                    return category.children.reduce((result, value, index, array) => {
-                        if (index % 2 === 0) {
-                            result.push(array.slice(index, index + 2));
-                        }
-
-                        return result;
-                    }, []);
+                calculateMenuOffset() {
+                    // Calcula el offset para que el menú ocupe todo el ancho
+                    const element = this.$el;
+                    if (element) {
+                        const rect = element.getBoundingClientRect();
+                        this.menuLeftOffset = rect.left;
+                    }
                 }
-            },
+            }
         });
     </script>
 @endPushOnce
