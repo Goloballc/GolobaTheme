@@ -106,12 +106,12 @@ composer dump-autoload
     npm run dev
     ```
 ## Cambiar el tema de Bagisto
-1. Abrir el navegador y e ir al panel del administrador y autenticarse ej. `https://Bagisto.test/admin/login`
+1. Abrir el navegador y e ir al panel del administrador y autenticarse ej. `https://bagisto.test/admin/login`
 2. Una vez en el panel del administrador ir a la barra lateral izquierda en **Configuración->Canales**
     1. Dentro de la vista de canales dar clic en el icono del lapiz para editar la configuración del canal.
     2. Hacer scroll hacía abajo hasta encontrar la ventana **Diseño** y dentro de esta en **Tema** Usar el selector para elegir **GolobaTheme**
     3. Hacer scroll hacía arriba y dar clic en el botón **Guardar Canal**
-    4. Ir a la url base del sitio `https://Bagisto.test` o dar clic al segundo botón de izquierda a derecha en la parte superior derecha (icono tienda).
+    4. Ir a la url base del sitio `https://bagisto.test` o dar clic al segundo botón de izquierda a derecha en la parte superior derecha (icono tienda).
 3. Listo, tema instalado.
 
 ## Consideraciones durante el desarrollo
