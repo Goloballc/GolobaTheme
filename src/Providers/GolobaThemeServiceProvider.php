@@ -17,6 +17,16 @@ class GolobaThemeServiceProvider extends ServiceProvider
         $this->publishes([
         __DIR__.'/../Resources/views'  => resource_path('themes/goloba-theme/views'),
     ]);
+
+    $this->loadVendorViews();
+    }
+
+    /**
+     * Load vendor package views override
+     */
+    protected function loadVendorViews()
+    {
+        $this->app['view']->prependNamespace('marketplace', __DIR__ . '/../Resources/views/webkul/marketplace');
     }
 
     /**
@@ -27,5 +37,9 @@ class GolobaThemeServiceProvider extends ServiceProvider
     public function register()
     {
         //
+        $this->mergeConfigFrom(
+        dirname(__DIR__).'/Config/bagisto-vite.php',
+        'bagisto-vite.viters'
+    );
     }
 }

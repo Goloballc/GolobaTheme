@@ -1,9 +1,9 @@
 # Goloba Theme para Bagisto 2.2.4
-### Por [Silcon Tech]('https://silcon.tech')
+### Por [Silcon Tech](https://silcon.tech)
 
 # Instrucciones de instalación
 
-## Obtener Tema
+## 1. Obtener Tema
 ### Clonar desde repositorio
 1. Ir a la parte superior.
 2. Dar clic en el botón **"<> Code"**.
@@ -18,7 +18,7 @@
 4. Abrir el directorio del proyecto e ir a la ruta `Bagisto/packages/Webkul`
 4. Abrir el archivo .zip y copiar el contenido o descomprimirlo dentro de la ruta del proyecto `Bagisto/packages/Webkul`
 
-## Instalar Tema
+## 2. Instalar Tema
 
 1. Abrir el archivo `composer.json` y agregar la siguiente línea:
  ```
@@ -105,21 +105,29 @@ composer dump-autoload
     ```
     npm run dev
     ```
-## Cambiar el tema de Bagisto
+## 3. Cambiar el tema de Bagisto
 1. Abrir el navegador y e ir al panel del administrador y autenticarse ej. `https://bagisto.test/admin/login`
 2. Una vez en el panel del administrador ir a la barra lateral izquierda en **Configuración->Canales**
+
     1. Dentro de la vista de canales dar clic en el icono del lapiz para editar la configuración del canal.
+
     2. Hacer scroll hacía abajo hasta encontrar la ventana **Diseño** y dentro de esta en **Tema** Usar el selector para elegir **GolobaTheme**
+
     3. Hacer scroll hacía arriba y dar clic en el botón **Guardar Canal**
+
     4. Ir a la url base del sitio `https://bagisto.test` o dar clic al segundo botón de izquierda a derecha en la parte superior derecha (icono tienda).
 3. Listo, tema instalado.
+
+## Personalización de vistas y assets de paquetes Vendor
+[**Guia**](README_CUSTOMIZATION.md)
 
 ## Consideraciones durante el desarrollo
 1. Conservar dos terminales
     1. La primera en la raiz del proyecto.
     2. La segunda para compilar los assets en la ruta `packages/Webkul/GolobaTheme`
+
 2. Resolver problemas de vistas que no se muestran correctamente, ya sea porque se eliminaron o no se están mostrando
-    1. En la raiz del proyecto la ruta `resources/themes` se encuentra el directorio `goloba-theme` eliminarlo.
+    1. En la raiz del proyecto en la ruta `resources/themes` se encuentra el directorio `goloba-theme` eliminarlo.
     2. Volver a publicar las vistas, en la primera terminal que está situada en la raiz del proyecto ejecutar el siguiente comando:
     ```
     php artisan vendor:publish --provider="Webkul\GolobaTheme\Providers\GolobaThemeServiceProvider"

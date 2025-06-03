@@ -1,0 +1,1 @@
+@bagistoVite(['src/Resources/assets/marketplace/css/shop.css'], 'goloba-theme')
