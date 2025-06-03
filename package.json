@@ -24,6 +24,7 @@
     "playwright": "^1.48.1",
     "readline-sync": "^1.4.10",
     "vee-validate": "^4.9.1",
-    "vue-flatpickr": "^2.3.0"
+    "vue-flatpickr": "^2.3.0",
+    "vuedraggable": "^4.1.0"
   }
 }
