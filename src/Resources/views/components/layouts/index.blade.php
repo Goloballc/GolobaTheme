@@ -145,5 +145,6 @@
         <script type="text/javascript">
             {!! core()->getConfigData('general.content.custom_scripts.custom_javascript') !!}
         </script>
+      <x-shop::layouts.cookie-notice />
     </body>
 </html>
