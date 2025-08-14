@@ -180,10 +180,25 @@
                             rules="required"
                             :label="trans('marketplace::app.shop.sellers.account.products.create.product-type')"
                         >
+                        
+                        {{-- 
+                            Nota:
+                            Esta sección ha sido modificada para restringir los tipos de producto que los vendedores pueden crear.
+                            Solo se permiten productos de tipo 'simple' y 'configurable'.
+
+                            Esta lógica filtra el arreglo $sellerAllowedProductTypes para mostrar únicamente los tipos permitidos.
+                            Si se desea permitir otros tipos en el futuro, basta con agregarlos al arreglo $allowedTypes.
+                        --}}
+                        @php
+                            $allowedTypes = ['simple', 'configurable'];
+                        @endphp
+                        
                             @foreach($sellerAllowedProductTypes as $key => $type)
-                                <option value="{{ $key }}">
-                                    @lang($type['name'])
-                                </option>
+                                @if (in_array($key, $allowedTypes))
+                                    <option value="{{ $key }}">
+                                        @lang($type['name'])
+                                    </option>
+                                @endif
                             @endforeach
                         </x-marketplace::shop.form.control-group.control>
 

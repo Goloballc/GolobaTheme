@@ -30,7 +30,7 @@
             <!-- Banner -->
             <div class="grid items-center justify-between bg-[#E6E9EE] max-sm:flex-row-reverse md:flex">
                 <div class="grid w-full gap-y-5 max-sm:mt-8 max-sm:px-4 md:w-[480px] ltr:md:ml-9 rtl:md:mr-9">
-                    <h1 class="font-dmserif text-5xl font-normal leading-[68px] text-navyBlue">
+                    <h1 class="font-medium text-5xl font-normal leading-[68px] text-navyBlue">
                         {{ core()->getConfigData('marketplace.settings.landing_page.banner_title') }}
                     </h1>
     
@@ -69,7 +69,7 @@
             <!-- Banner Bottom Content -->
             <div class="grid justify-center justify-items-center gap-[130px] max-lg:flex-wrap max-sm:gap-4 md:flex">
                 <div class="grid">
-                    <p class="text-center font-dmserif text-5xl font-normal leading-[70px] text-navyBlue">
+                    <p class="text-center font-medium text-5xl font-normal leading-[70px] text-navyBlue">
                         {{ core()->getConfigData('marketplace.settings.landing_page.community_count') }}+
                     </p>
     
@@ -79,7 +79,7 @@
                 </div>
     
                 <div class="grid">
-                    <p class="text-center font-dmserif text-5xl font-medium leading-[70px] text-navyBlue">
+                    <p class="text-center text-5xl font-medium leading-[70px] text-navyBlue">
                         {{ core()->getConfigData('marketplace.settings.landing_page.business_hour') }}
                     </p>
     
@@ -89,7 +89,7 @@
                 </div>
     
                 <div class="grid">
-                    <p class="text-center font-dmserif text-5xl font-medium leading-[70px] text-navyBlue">
+                    <p class="text-center font-medium text-5xl font-medium leading-[70px] text-navyBlue">
                         {{ core()->getConfigData('marketplace.settings.landing_page.payment_duration') }}
                     </p>
     
@@ -99,7 +99,7 @@
                 </div>
     
                 <div class="grid">
-                    <p class="text-center font-dmserif text-5xl font-medium leading-[70px] text-navyBlue">
+                    <p class="text-center text-5xl font-medium leading-[70px] text-navyBlue">
                         {{ core()->getConfigData('marketplace.settings.landing_page.serviceable_pincode') }}+
                     </p>
     

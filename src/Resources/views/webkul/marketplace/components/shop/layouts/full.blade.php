@@ -2,6 +2,7 @@
     'hasHeader'  => true,
     'hasFeature' => true,
     'hasFooter'  => true,
+    'backgroundClass'=> 'bg-white',
 ])
 
 <!DOCTYPE html>
@@ -65,7 +66,7 @@
             {!! view_render_event('bagisto.shop.marketplace.layout.full.content.before') !!}
 
             <!-- Page Content Blade Component -->
-            <main id="main" class="bg-white">
+            <main id="main" class="{{ $backgroundClass }}">
                 {{ $slot }}
             </main>
 

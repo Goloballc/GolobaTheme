@@ -14,8 +14,9 @@
                 />
             @else
                 <img
-                    src="{{ bagisto_asset('images/logo.svg') }}"
+                    src="{{ bagisto_asset('images/logo_goloba.svg') }}"
                     alt="Seller Logo"
+                    class="w-32"
                 />
             @endif
         </a>

@@ -159,6 +159,12 @@
         @break
 
     @case('boolean')
+        @if ($attribute->code === 'manage_stock')
+            <input type="hidden" id="manage_stock" name="manage_stock" value="1">
+            @break
+        @endif
+
+
         @php $selectedValue = old($attribute->code) ?: $product[$attribute->code] @endphp
 
         <x-marketplace::shop.form.control-group.control

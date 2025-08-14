@@ -40,7 +40,7 @@
         <div
             class="m-auto w-full max-w-[870px] rounded-xl border border-[#E9E9E9] p-16 px-[90px] max-md:px-8 max-md:py-8"
         >
-            <h1 class="font-dmserif text-4xl max-sm:text-2xl">
+            <h1 class="font-medium text-4xl max-sm:text-2xl">
                 @lang('marketplace::app.shop.sellers.account.reset-password.title')
             </h1>
 

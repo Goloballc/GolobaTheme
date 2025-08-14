@@ -1,0 +1,351 @@
+<!-- SEO Meta Content -->
+@push('meta')
+    <meta name="description" content="@lang('marketplace::app.shop.sellers.account.signup.page-title')"/>
+
+    <meta name="keywords" content="@lang('marketplace::app.shop.sellers.account.signup.page-title')"/>
+@endPush
+
+<x-marketplace::shop.layouts.full
+    :has-header="false"
+    :has-feature="false"
+    :has-footer="false"
+    background-class="bg-transparent"
+>
+    <!-- Page Title -->
+    <x-slot:title>
+        @lang('marketplace::app.shop.sellers.account.signup.page-title')
+    </x-slot>
+
+    <!-- Picture Element with Responsive Background -->
+    <picture class="fixed inset-0 -z-10">
+        <!-- PC/Desktop (1366px+) -->
+        <source 
+            media="(min-width: 1366px)" 
+            srcset="{{ bagisto_asset('images/bg_login_pc.webp') }}"
+        >
+        
+        <!-- Tablet (768px - 1365px) -->
+        <source 
+            media="(min-width: 768px)" 
+            srcset="{{ bagisto_asset('images/bg_login_tablet.webp') }}"
+        >
+        
+        <!-- Mobile (hasta 767px) -->
+        <source 
+            media="(max-width: 767px)" 
+            srcset="{{ bagisto_asset('images/bg_login_mobile.webp') }}"
+        >
+        
+        <!-- Fallback image -->
+        <img 
+            src="{{ bagisto_asset('images/bg_login_pc.webp') }}" 
+            alt="Background" 
+            class="h-full w-full object-cover object-top"
+        >
+    </picture>
+
+	<div class="container mt-20 max-1180:px-5 relative z-10">
+        {!! view_render_event('marketplace.seller.account.sign_up.logo.before') !!}
+        
+        <!-- Company Logo -->
+        <!-- <div class="flex items-center gap-x-14 max-[1180px]:gap-x-9">
+            <a
+                href="{{ route('shop.home.index') }}"
+                class="m-[0_auto_20px_auto]"
+                aria-label="@lang('marketplace::app.shop.sellers.account.signup.bagisto')"
+            >
+                <img
+                    src="{{ core()->getCurrentChannel()->logo_url ?? bagisto_asset('images/logo.svg') }}"
+                    alt="{{ config('app.name') }}"
+                    width="131"
+                    height="29"
+                >
+            </a>
+        </div> -->
+
+        {!! view_render_event('marketplace.seller.account.sign_up.logo.after') !!}
+        
+        <!-- Form Container -->
+		<div
+			class="bg-white m-auto w-full max-w-[870px] rounded-xl shadow-md p-16 px-[90px] max-md:px-8 max-md:py-8 max-sm:p-4"
+        >
+			<h1 class="font-medium text-4xl max-sm:text-2xl text-center">
+                @lang('marketplace::app.shop.sellers.account.signup.page-title')
+            </h1>
+
+			<p class="mt-4 text-xl text-[#6E6E6E] max-sm:text-base text-center">
+                @lang('marketplace::app.shop.sellers.account.signup.form-signup-text')
+            </p>
+
+            {!! view_render_event('marketplace.seller.account.sign_up.before') !!}
+            
+            <div class="mt-14 rounded max-sm:mt-8">
+                <x-shop::form :action="route('goloba-theme.marketplace.seller.register.store')">
+                    {!! view_render_event('marketplace.seller.account.sign_up.form_controls.before') !!}
+                    
+                    <x-shop::form.control-group>
+                        <x-shop::form.control-group.label class="required">
+                            @lang('marketplace::app.shop.sellers.account.signup.name')
+                        </x-shop::form.control-group.label>
+
+                        <x-shop::form.control-group.control
+                            type="text"
+                            class="bg-grayGolobaSemiLight !p-[20px_25px] !rounded-full"
+                            name="name"
+                            rules="required"
+                            :value="old('name')"
+                            :label="trans('marketplace::app.shop.sellers.account.signup.name')"
+                            :placeholder="trans('marketplace::app.shop.sellers.account.signup.name')"
+                            aria-label="@lang('marketplace::app.shop.sellers.account.signup.name')"
+                            aria-required="true"
+                        />
+
+                        <x-shop::form.control-group.error control-name="name" />
+                    </x-shop::form.control-group>
+
+                    {!! view_render_event('marketplace.seller.account.sign_up.form.name_field.after') !!}
+
+                    <x-shop::form.control-group>
+                        <x-shop::form.control-group.label class="required">
+                            Nombre de tu tienda para tu dirección web
+                        </x-shop::form.control-group.label>
+
+                        <x-shop::form.control-group.control
+                            type="text"
+                            class="bg-grayGolobaSemiLight !p-[20px_25px] !rounded-full"
+                            name="url"
+                            rules="required"
+                            :value="old('url')"
+                            :label="trans('marketplace::app.shop.sellers.account.signup.url')"
+                            :placeholder="trans('marketplace::app.shop.sellers.account.signup.url')"
+                            :aria-label="trans('marketplace::app.shop.sellers.account.signup.url')"
+                            aria-required="true"
+                        />
+
+                        <x-shop::form.control-group.error control-name="url" />
+                    </x-shop::form.control-group>
+
+                    {!! view_render_event('marketplace.seller.account.sign_up.form.url_field.after') !!}
+                    
+                    <x-shop::form.control-group>
+                        <x-shop::form.control-group.label class="required">
+                            @lang('marketplace::app.shop.sellers.account.signup.email')
+                        </x-shop::form.control-group.label>
+
+                        <x-shop::form.control-group.control
+                            type="email"
+                            class="bg-grayGolobaSemiLight !p-[20px_25px] !rounded-full"
+                            name="email"
+                            rules="required|email"
+                            :value="old('email')"
+                            :label="trans('marketplace::app.shop.sellers.account.signup.email')"
+                            placeholder="email@example.com"
+                            aria-label="@lang('marketplace::app.shop.sellers.account.signup.email')"
+                            aria-required="true"
+                        />
+
+                        <x-shop::form.control-group.error control-name="email" />
+                    </x-shop::form.control-group>
+
+                    {!! view_render_event('marketplace.seller.account.sign_up.form.email_field.after') !!}
+
+                    <x-shop::form.control-group class="mb-6">
+                        <x-shop::form.control-group.label class="required">
+                            @lang('marketplace::app.shop.sellers.account.signup.password')
+                        </x-shop::form.control-group.label>
+
+                        <x-shop::form.control-group.control
+                            type="password"
+                            class="bg-grayGolobaSemiLight !p-[20px_25px] !rounded-full"
+                            name="password"
+                            rules="required|min:6"
+                            :value="old('password')"
+                            :label="trans('marketplace::app.shop.sellers.account.signup.password')"
+                            :placeholder="trans('marketplace::app.shop.sellers.account.signup.password')"
+                            ref="password"
+                            aria-label="@lang('marketplace::app.shop.sellers.account.signup.password')"
+                            aria-required="true"
+                        />
+
+                        <x-shop::form.control-group.error control-name="password" />
+                    </x-shop::form.control-group>
+
+                    {!! view_render_event('marketplace.seller.account.sign_up.form.password_field.after') !!}
+                    
+                    <x-shop::form.control-group>
+                        <x-shop::form.control-group.label>
+                            @lang('marketplace::app.shop.sellers.account.signup.confirm-pass')
+                        </x-shop::form.control-group.label>
+
+                        <x-shop::form.control-group.control
+                            type="password"
+                            class="bg-grayGolobaSemiLight !p-[20px_25px] !rounded-full"
+                            name="password_confirmation"
+                            rules="confirmed:@password"
+                            value=""
+                            :label="trans('marketplace::app.shop.sellers.account.signup.password')"
+                            :placeholder="trans('marketplace::app.shop.sellers.account.signup.confirm-pass')"
+                            aria-label="@lang('marketplace::app.shop.sellers.account.signup.confirm-pass')"
+                            aria-required="true"
+                        />
+
+                        <x-shop::form.control-group.error control-name="password_confirmation" />
+                    </x-shop::form.control-group>
+
+                    {!! view_render_event('marketplace.seller.account.sign_up.form.password_confirmation_field.after') !!}
+
+                    <!-- Campo de Teléfono -->
+                    <x-shop::form.control-group>
+                        <x-shop::form.control-group.label class="required">
+                            @lang('shop::app.customers.signup-form.phone')
+                        </x-shop::form.control-group.label>
+
+                        <x-shop::form.control-group.control
+                            type="tel"
+                            class="bg-grayGolobaSemiLight px-6 py-4 max-md:py-3 max-sm:py-2 !rounded-full"
+                            name="phone"
+                            rules="required|phone|max:20"
+                            :value="old('phone')"
+                            :label="trans('shop::app.customers.signup-form.phone')"
+                            :placeholder="trans('shop::app.customers.signup-form.phone')"
+                            :aria-label="trans('shop::app.customers.signup-form.phone')"
+                            aria-required="true"
+                        />
+
+                        <x-shop::form.control-group.error control-name="phone" />
+                        
+                        @error('phone')
+                            <div class="text-red-500 text-xs italic mt-1">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </x-shop::form.control-group>
+
+                    <!-- Campo de Instagram URL -->
+                    <x-shop::form.control-group>
+                        <x-shop::form.control-group.label class="required">
+                            @lang('shop::app.customers.signup-form.instagram-url')
+                        </x-shop::form.control-group.label>
+
+                        <x-shop::form.control-group.control
+                            type="url"
+                            class="bg-grayGolobaSemiLight px-6 py-4 max-md:py-3 max-sm:py-2 !rounded-full"
+                            name="instagram"
+                            rules="required|url|max:255"
+                            :value="old('instagram_url')"
+                            :label="trans('shop::app.customers.signup-form.instagram-url')"
+                            placeholder="https://instagram.com/tu_usuario"
+                            :aria-label="trans('shop::app.customers.signup-form.instagram-url')"
+                        />
+
+                        <x-shop::form.control-group.error control-name="instagram_url" />
+                    </x-shop::form.control-group>
+
+                    @if (core()->getConfigData('customer.captcha.credentials.status'))
+                        <div class="mb-5 flex">
+                            {!! Captcha::render() !!}
+                        </div>
+                    @endif
+
+                    <!-- Checkbox: Aceptar política -->
+                    <x-shop::form.control-group>
+                        <div class="flex select-none items-center gap-1.5 mt-4">
+                            <x-shop::form.control-group.control
+                                type="checkbox"
+                                name="accept_policy"
+                                id="accept-policy"
+                                value="1"
+                                rules="required"
+                                :label="trans('shop::app.customers.signup-form.accept-policy')"
+                                :checked="old('accept_policy')"
+                            />
+                            <label
+                                class="icon-uncheck peer-checked:icon-check-box cursor-pointer text-2xl text-magentaGoloba peer-checked:text-magentaGoloba max-sm:text-xl"
+                                for="accept-policy"
+                            ></label>
+                            
+                            <label
+                                class="cursor-pointer select-none text-base text-magentaGoloba max-sm:text-sm ltr:pl-0 rtl:pr-0"
+                                for="accept-policy"
+                            >
+                                @lang('shop::app.customers.signup-form.accept-policy')
+                            </label>
+                        </div>
+                        
+                        <x-shop::form.control-group.error control-name="accept_policy" />
+                    </x-shop::form.control-group>
+                    
+                    <!-- Checkbox: Mayor de edad -->
+                    <x-shop::form.control-group>
+                        <div class="flex select-none items-center gap-1.5 mt-4">
+                            <x-shop::form.control-group.control
+                                type="checkbox"
+                                name="is_adult"
+                                id="is-adult"
+                                value="1"
+                                rules="required"
+                                :label="trans('shop::app.customers.signup-form.is-adult')"
+                                :checked="old('is_adult')"
+                            />
+
+                            <label
+                                class="icon-uncheck peer-checked:icon-check-box cursor-pointer text-2xl text-magentaGoloba peer-checked:text-magentaGoloba max-sm:text-xl"
+                                for="is-adult"
+                            ></label>
+                            
+                            <label
+                                class="cursor-pointer select-none text-base text-magentaGoloba max-sm:text-sm ltr:pl-0 rtl:pr-0"
+                                for="is-adult"
+                            >
+                                @lang('shop::app.customers.signup-form.is-adult')
+                            </label>
+                        </div>
+                        
+                        <x-shop::form.control-group.error control-name="is_adult" />
+                    </x-shop::form.control-group>
+
+                    {!! view_render_event('marketplace.seller.account.sign_up.form.captcha.after') !!}
+
+                    <div class="mt-8 flex">
+                        <button
+                            class="primary-button m-0 block w-full max-w-full rounded-2xl px-11 py-4 text-center text-base ltr:ml-0 rtl:mr-0"
+                            type="submit"
+                        >
+                            @lang('marketplace::app.shop.sellers.account.signup.button-title')
+                        </button>
+                    </div>
+
+                    <?php // {!! view_render_event('marketplace.seller.account.sign_up.form_controls.after') !!} ?>
+                </x-shop::form>
+            </div>
+
+            {!! view_render_event('marketplace.seller.account.sign_up.after') !!}
+
+			<p class="mt-5 font-medium text-[#6E6E6E]">
+                @lang('marketplace::app.shop.sellers.account.signup.account-exists')
+
+                <a class="text-magentaGoloba"
+                    href="{{ route('marketplace.seller.session.index') }}"
+                >
+                    @lang('marketplace::app.shop.sellers.account.signup.sign-in-button')
+                </a>
+
+                {!! view_render_event('marketplace.seller.account.sign_up.sign_in_btn.after') !!}
+            </p>
+
+            {!! view_render_event('marketplace.seller.account.sign_up.sign_in_btn.paragraph.after') !!}
+		</div>
+
+        {!! view_render_event('marketplace.seller.account.sign_up.form_container.after') !!}
+
+        <p class="mb-4 mt-8 text-center text-xs text-[#6E6E6E]">
+            @lang('marketplace::app.shop.sellers.account.signup.footer', ['current_year' => date('Y') ])
+        </p>
+
+        {!! view_render_event('marketplace.seller.account.sign_up.footer.after') !!}
+	</div>
+
+    @push('scripts')
+        {!! Captcha::renderJS() !!}
+    @endpush
+</x-marketplace::shop.layouts.full>

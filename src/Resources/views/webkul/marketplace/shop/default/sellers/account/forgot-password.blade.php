@@ -69,11 +69,11 @@
         <div
             class="bg-white m-auto w-full max-w-[870px] rounded-xl shadow-md p-16 px-[90px] max-md:px-8 max-md:py-8 max-sm:p-4"
         >
-            <h1 class="font-medium text-4xl max-sm:text-2xl">
+            <h1 class="font-medium text-4xl max-sm:text-2xl text-center">
                 @lang('marketplace::app.shop.sellers.account.forgot-password.title')
             </h1>
 
-            <p class="mt-4 text-xl text-[#6E6E6E] max-sm:text-base">
+            <p class="mt-4 text-xl text-[#6E6E6E] max-sm:text-base text-center">
                 @lang('marketplace::app.shop.sellers.account.forgot-password.forgot-password-text')
             </p>
 
