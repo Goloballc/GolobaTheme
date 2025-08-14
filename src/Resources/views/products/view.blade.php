@@ -11,6 +11,13 @@
     $attributeData = collect($customAttributeValues)->filter(fn ($item) => ! empty($item['value']));
 @endphp
 
+@php
+    $discount = 0;
+    if ($product->price > 0 && $product->special_price > 0) {
+        $discount = round((($product->price - $product->special_price) / $product->price) * 100, 2);
+    }
+@endphp
+
 <!-- SEO Meta Content -->
 @push('meta')
     <meta name="description" content="{{ trim($product->meta_description) != "" ? $product->meta_description : \Illuminate\Support\Str::limit(strip_tags($product->description), 120, '') }}"/>
@@ -293,38 +300,50 @@
                     >
 
                     <div class="container px-[60px] max-1180:px-0">
-                        <div class="mt-12 flex gap-9 max-1180:flex-wrap max-lg:mt-0 max-sm:gap-y-4">
+                        <div class="mt-12 flex flex-col gap-9 max-1180:flex-wrap max-lg:mt-0 max-sm:gap-y-4">
                             <!-- Gallery Blade Inclusion -->
                             @include('shop::products.view.gallery')
-
                             <!-- Details -->
-                            <div class="relative max-w-[590px] max-1180:w-full max-1180:max-w-full max-1180:px-5 max-sm:px-4">
+                            <div class="relative max-w-[590px] max-1180:w-full max-1180:max-w-full max-1180:px-5 max-sm:px-4 mx-auto">
                                 {!! view_render_event('bagisto.shop.products.name.before', ['product' => $product]) !!}
 
                                 <div class="flex justify-between gap-4">
-                                    <h1 class="break-all text-3xl font-medium max-sm:text-xl">
+                                    <h1 class="break-all font-medium max-sm:text-xl text-[#2e2e2e]">
                                         {{ $product->name }}
                                     </h1>
-
-                                    @if (core()->getConfigData('customer.settings.wishlist.wishlist_option'))
-                                        <div
-                                            class="flex max-h-[46px] min-h-[46px] min-w-[46px] cursor-pointer items-center justify-center rounded-full border bg-white text-2xl transition-all hover:opacity-[0.8] max-sm:max-h-7 max-sm:min-h-7 max-sm:min-w-7 max-sm:text-base"
-                                            role="button"
-                                            aria-label="@lang('shop::app.products.view.add-to-wishlist')"
-                                            tabindex="0"
-                                            :class="isWishlist ? 'icon-heart-fill text-red-600' : 'icon-heart'"
-                                            @click="addToWishlist"
-                                        >
-                                        </div>
-                                    @endif
                                 </div>
 
                                 {!! view_render_event('bagisto.shop.products.name.after', ['product' => $product]) !!}
 
+                                <!-- Pricing -->
+                                {!! view_render_event('bagisto.shop.products.price.before', ['product' => $product]) !!}
+
+                                <p class="flex items-center gap-2.5 text-2xl !font-medium max-sm:mt-2 max-sm:gap-x-2.5 max-sm:gap-y-0 max-sm:text-lg">
+                                    {!! $product->getTypeInstance()->getPriceHtml() !!} <span class="bg-[#B12C9E] rounded-full text-white text-xs px-2 self-start mt-1">-{{ $discount }}%</span>
+                                </p>
+
+                                {{-- @if (\Webkul\Tax\Facades\Tax::isInclusiveTaxProductPrices())
+                                    <span class="text-sm font-normal text-zinc-500 max-sm:text-xs">
+                                        (@lang('shop::app.products.view.tax-inclusive'))
+                                    </span>
+                                @endif --}}
+
+                                @if (count($product->getTypeInstance()->getCustomerGroupPricingOffers()))
+                                    <div class="mt-2.5 grid gap-1.5">
+                                        @foreach ($product->getTypeInstance()->getCustomerGroupPricingOffers() as $offer)
+                                            <p class="text-zinc-500 [&>*]:text-black">
+                                                {!! $offer !!}
+                                            </p>
+                                        @endforeach
+                                    </div>
+                                @endif
+
+                                {!! view_render_event('bagisto.shop.products.price.after', ['product' => $product]) !!}
+
                                 <!-- Rating -->
                                 {!! view_render_event('bagisto.shop.products.rating.before', ['product' => $product]) !!}
 
-                                @if ($totalRatings = $reviewHelper->getTotalFeedback($product))
+                                {{-- @if ($totalRatings = $reviewHelper->getTotalFeedback($product))
                                     <!-- Scroll To Reviews Section and Activate Reviews Tab -->
                                     <div
                                         class="mt-1 w-max cursor-pointer max-sm:mt-1.5"
@@ -339,42 +358,23 @@
                                             ::rating="true"
                                         />
                                     </div>
-                                @endif
+                                @endif --}}
+
+                                <div class="flex items-center">
+                                    @for ($i = 1; $i <= 5; $i++)
+                                        <span class="icon-star-fill text-xl {{ $avgRatings >= $i ? 'text-[#b4d241]' : 'text-[#d9d9d9]' }}"></span>
+                                    @endfor
+                                </div>
 
                                 {!! view_render_event('bagisto.shop.products.rating.after', ['product' => $product]) !!}
 
-                                <!-- Pricing -->
-                                {!! view_render_event('bagisto.shop.products.price.before', ['product' => $product]) !!}
+                                {{-- {!! view_render_event('bagisto.shop.products.short_description.before', ['product' => $product]) !!} --}}
 
-                                <p class="mt-[22px] flex items-center gap-2.5 text-2xl !font-medium max-sm:mt-2 max-sm:gap-x-2.5 max-sm:gap-y-0 max-sm:text-lg">
-                                    {!! $product->getTypeInstance()->getPriceHtml() !!}
-                                </p>
-
-                                @if (\Webkul\Tax\Facades\Tax::isInclusiveTaxProductPrices())
-                                    <span class="text-sm font-normal text-zinc-500 max-sm:text-xs">
-                                        (@lang('shop::app.products.view.tax-inclusive'))
-                                    </span>
-                                @endif
-
-                                @if (count($product->getTypeInstance()->getCustomerGroupPricingOffers()))
-                                    <div class="mt-2.5 grid gap-1.5">
-                                        @foreach ($product->getTypeInstance()->getCustomerGroupPricingOffers() as $offer)
-                                            <p class="text-zinc-500 [&>*]:text-black">
-                                                {!! $offer !!}
-                                            </p>
-                                        @endforeach
-                                    </div>
-                                @endif
-
-                                {!! view_render_event('bagisto.shop.products.price.after', ['product' => $product]) !!}
-
-                                {!! view_render_event('bagisto.shop.products.short_description.before', ['product' => $product]) !!}
-
-                                <p class="mt-6 text-lg text-zinc-500 max-sm:mt-1.5 max-sm:text-sm">
+                                {{-- <p class="mt-6 text-lg text-zinc-500 max-sm:mt-1.5 max-sm:text-sm">
                                     {!! $product->short_description !!}
-                                </p>
+                                </p> --}}
 
-                                {!! view_render_event('bagisto.shop.products.short_description.after', ['product' => $product]) !!}
+                                {{-- {!! view_render_event('bagisto.shop.products.short_description.after', ['product' => $product]) !!} --}}
 
                                 @include('shop::products.view.types.configurable')
 
@@ -388,25 +388,13 @@
                                 <!-- Product Actions and Qunatity Box -->
                                 <div class="mt-8 flex max-w-[470px] gap-4 max-sm:mt-4">
 
-                                    {!! view_render_event('bagisto.shop.products.view.quantity.before', ['product' => $product]) !!}
-
-                                    @if ($product->getTypeInstance()->showQuantityBox())
-                                        <x-shop::quantity-changer
-                                            name="quantity"
-                                            value="1"
-                                            class="gap-x-4 rounded-xl px-7 py-4 max-md:py-3 max-sm:gap-x-5 max-sm:rounded-lg max-sm:px-4 max-sm:py-1.5"
-                                        />
-                                    @endif
-
-                                    {!! view_render_event('bagisto.shop.products.view.quantity.after', ['product' => $product]) !!}
-
                                     @if (core()->getConfigData('sales.checkout.shopping_cart.cart_page'))
                                         <!-- Add To Cart Button -->
                                         {!! view_render_event('bagisto.shop.products.view.add_to_cart.before', ['product' => $product]) !!}
 
                                         <x-shop::button
                                             type="submit"
-                                            class="secondary-button w-full max-w-full max-md:py-3 max-sm:rounded-lg max-sm:py-1.5"
+                                            class="bg-[#B12C9E] rounded-full font-bold text-white px-2 py-1 text-xl max-w-full max-md:py-3 max-sm:py-1.5"
                                             button-type="secondary-button"
                                             :loading="false"
                                             :title="trans('shop::app.products.view.add-to-cart')"
@@ -418,13 +406,38 @@
 
                                         {!! view_render_event('bagisto.shop.products.view.add_to_cart.after', ['product' => $product]) !!}
                                     @endif
+
+                                    {!! view_render_event('bagisto.shop.products.view.quantity.before', ['product' => $product]) !!}
+
+                                    @if ($product->getTypeInstance()->showQuantityBox())
+                                        <x-shop::quantity-changer
+                                            name="quantity"
+                                            value="1"
+                                            class="gap-x-2 rounded-xl max-md:py-3 max-sm:gap-x-5 max-sm:rounded-lg max-sm:px-4 max-sm:py-1.5 quantity-changer-container"
+                                        />
+                                    @endif
+
+                                    {!! view_render_event('bagisto.shop.products.view.quantity.after', ['product' => $product]) !!}
                                 </div>
+
+				                {{-- @php
+                                if ($product->type == 'configurable') {
+                                    $qty = 0;
+                                    foreach ($product->variants as $variant) {
+                                        $qty += $variant->totalQuantity();
+                                    }
+                                } else {
+                                    $qty = $product->totalQuantity();
+                                }
+                                @endphp
+
+                                <p class="mt-4 text-lg">{{ $qty }} {{ $qty == 1 ? 'disponible' : 'disponibles' }}</p> --}}
 
                                 <!-- Buy Now Button -->
                                 @if (core()->getConfigData('sales.checkout.shopping_cart.cart_page'))
                                     {!! view_render_event('bagisto.shop.products.view.buy_now.before', ['product' => $product]) !!}
 
-                                    @if (core()->getConfigData('catalog.products.storefront.buy_now_button_display'))
+                                    {{-- @if (core()->getConfigData('catalog.products.storefront.buy_now_button_display'))
                                         <x-shop::button
                                             type="submit"
                                             class="primary-button mt-5 w-full max-w-[470px] max-md:py-3 max-sm:mt-3 max-sm:rounded-lg max-sm:py-1.5"
@@ -435,7 +448,7 @@
                                             @click="is_buy_now=1;"
                                             ::disabled="isStoring.buyNow"
                                         />
-                                    @endif
+                                    @endif --}}
 
                                     {!! view_render_event('bagisto.shop.products.view.buy_now.after', ['product' => $product]) !!}
                                 @endif
@@ -443,7 +456,7 @@
                                 {!! view_render_event('bagisto.shop.products.view.additional_actions.before', ['product' => $product]) !!}
 
                                 <!-- Share Buttons -->
-                                <div class="mt-10 flex gap-9 max-md:mt-4 max-md:flex-wrap max-sm:justify-center max-sm:gap-3">
+                                {{-- <div class="mt-10 flex gap-9 max-md:mt-4 max-md:flex-wrap max-sm:justify-center max-sm:gap-3">
                                     {!! view_render_event('bagisto.shop.products.view.compare.before', ['product' => $product]) !!}
 
                                     <div
@@ -463,7 +476,7 @@
                                     </div>
 
                                     {!! view_render_event('bagisto.shop.products.view.compare.after', ['product' => $product]) !!}
-                                </div>
+                                </div> --}}
 
                                 {!! view_render_event('bagisto.shop.products.view.additional_actions.after', ['product' => $product]) !!}
                             </div>
@@ -661,3 +674,4 @@
         </script>
     @endPushOnce
 </x-shop::layouts>
+
