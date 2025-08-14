@@ -131,7 +131,7 @@
                         @guest('customer')
                             <x-slot:content>
                                 <div class="grid gap-2.5">
-                                    <p class="font-dmserif text-xl">
+                                    <p class="font-medium text-xl">
                                         @lang('shop::app.components.layouts.header.welcome-guest')
                                     </p>
     
@@ -149,14 +149,14 @@
 
                                     <a
                                         href="{{ route('shop.customer.session.create') }}"
-                                        class="m-0 mx-auto block w-max cursor-pointer rounded-2xl bg-navyBlue px-7 py-4 text-center text-base font-medium text-white ltr:ml-0 rtl:mr-0"
+                                        class="primary-button rounded-full m-0 mx-auto block w-max cursor-pointer px-7 py-4 text-center text-base font-medium text-white ltr:ml-0 rtl:mr-0"
                                     >
                                         @lang('shop::app.components.layouts.header.sign-in')
                                     </a>
     
                                     <a
                                         href="{{ route('shop.customers.register.index') }}"
-                                        class="m-0 mx-auto block w-max cursor-pointer rounded-2xl border-2 border-navyBlue bg-white px-7 py-3.5 text-center text-base font-medium text-navyBlue ltr:ml-0 rtl:mr-0"
+                                        class="green-button rounded-full m-0 mx-auto block w-max cursor-pointer px-7 py-3.5 text-center text-base font-medium ltr:ml-0 rtl:mr-0"
                                     >
                                         @lang('shop::app.components.layouts.header.sign-up')
                                     </a>
@@ -172,7 +172,7 @@
                         @auth('customer')
                             <x-slot:content class="!p-0">
                                 <div class="grid gap-2.5 p-5 pb-0">
-                                    <p class="font-dmserif text-xl">
+                                    <p class="font-medium text-xl">
                                         @lang('shop::app.components.layouts.header.welcome')’
                                         {{ auth()->guard('customer')->user()->first_name }}
                                     </p>

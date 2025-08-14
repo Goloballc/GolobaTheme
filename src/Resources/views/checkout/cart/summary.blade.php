@@ -147,7 +147,7 @@
 
         {!! view_render_event('bagisto.shop.checkout.onepage.summary.delivery_charges.after') !!}
 
-        <!-- Taxes -->
+        <!-- Taxes 
         {!! view_render_event('bagisto.shop.checkout.cart.summary.tax.before') !!}
 
         <div
@@ -204,7 +204,9 @@
             </div>
         </div>
 
-        {!! view_render_event('bagisto.shop.checkout.cart.summary.tax.after') !!}
+        {!! view_render_event('bagisto.shop.checkout.cart.summary.tax.after') !!}  
+
+        se comentó esta parte para ocultar los impuestos -->
    
         <!-- Cart Grand Total -->
         {!! view_render_event('bagisto.shop.checkout.cart.summary.grand_total.before') !!}

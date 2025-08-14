@@ -9,6 +9,8 @@
     @case('email')
     @case('password')
     @case('number')
+    @case('tel')
+    @case('url')
         <v-field
             v-slot="{ field, errors }"
             {{ $attributes->only(['name', ':name', 'value', ':value', 'v-model', 'rules', ':rules', 'label', ':label']) }}
@@ -149,7 +151,7 @@
     @case('checkbox')
         <v-field
             type="checkbox"
-            class="hidden"
+            class="peer hidden"
             v-slot="{ field }"
             {{ $attributes->only(['name', ':name', 'value', ':value', 'v-model', 'rules', ':rules', 'label', ':label', 'key', ':key']) }}
             name="{{ $name }}"
@@ -157,17 +159,11 @@
             <input
                 type="checkbox"
                 v-bind="field"
-                class="peer sr-only"
+                class="peer hidden sr-only"
                 {{ $attributes->except(['rules', 'label', ':label', 'key', ':key']) }}
                 name="{{ $name }}"
             />
         </v-field>
-
-        <label
-            class="icon-uncheck peer-checked:icon-check-box cursor-pointer text-2xl peer-checked:text-navyBlue"
-            {{ $attributes->except(['value', ':value', 'v-model', 'rules', ':rules', 'label', ':label', 'key', ':key']) }}
-        >
-        </label>
         @break
 
     @case('radio')

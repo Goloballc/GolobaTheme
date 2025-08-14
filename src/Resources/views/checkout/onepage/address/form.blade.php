@@ -100,7 +100,7 @@
                     type="text"
                     ::name="controlName + '.address.[0]'"
                     ::value="address.address[0]"
-                    rules="required|address"
+                    rules="required"
                     :label="trans('shop::app.checkout.onepage.address.street-address')"
                     :placeholder="trans('shop::app.checkout.onepage.address.street-address')"
                 />
@@ -131,123 +131,176 @@
             {!! view_render_event('bagisto.shop.checkout.onepage.address.form.address.after') !!}
 
             <div class="grid grid-cols-2 gap-x-5 max-md:grid-cols-1">
-                <!-- Country -->
-                <x-shop::form.control-group class="!mb-4">
-                    <x-shop::form.control-group.label class="{{ core()->isCountryRequired() ? 'required' : '' }} !mt-0">
-                        @lang('shop::app.checkout.onepage.address.country')
-                    </x-shop::form.control-group.label>
 
-                    <x-shop::form.control-group.control
-                        type="select"
-                        ::name="controlName + '.country'"
-                        ::value="address.country"
-                        v-model="selectedCountry"
-                        rules="{{ core()->isCountryRequired() ? 'required' : '' }}"
-                        :label="trans('shop::app.checkout.onepage.address.country')"
-                        :placeholder="trans('shop::app.checkout.onepage.address.country')"
-                    >
-                        <option value="">
-                            @lang('shop::app.checkout.onepage.address.select-country')
-                        </option>
+ <!-- Country -->
+<x-shop::form.control-group class="!mb-4">
+    <x-shop::form.control-group.label class="{{ core()->isCountryRequired() ? 'required' : '' }} !mt-0">
+        @lang('shop::app.checkout.onepage.address.country')
+    </x-shop::form.control-group.label>
 
-                        <option
-                            v-for="country in countries"
-                            :value="country.code"
-                        >
-                            @{{ country.name }}
-                        </option>
-                    </x-shop::form.control-group.control>
+    <!-- Si el país es CO, muestra solo Colombia -->
+    <template v-if="selectedCountry === 'CO' || address.country === 'CO'">
+        <x-shop::form.control-group.control
+            type="select"
+            ::name="controlName + '.country'"
+            v-model="selectedCountry"
+            rules="{{ core()->isCountryRequired() ? 'required' : '' }}"
+            :label="trans('shop::app.checkout.onepage.address.country')"
+        >
+            <option value="CO">Colombia</option>
+        </x-shop::form.control-group.control>
+    </template>
 
-                    <x-shop::form.control-group.error ::name="controlName + '.country'" />
-                </x-shop::form.control-group>
+    <!-- Para otros países, lista completa -->
+    <template v-else>
+        <x-shop::form.control-group.control
+            type="select"
+            ::name="controlName + '.country'"
+            ::value="address.country"
+            v-model="selectedCountry"
+            rules="{{ core()->isCountryRequired() ? 'required' : '' }}"
+            :label="trans('shop::app.checkout.onepage.address.country')"
+            :placeholder="trans('shop::app.checkout.onepage.address.country')"
+        >
+            <option value="">
+                @lang('shop::app.checkout.onepage.address.select-country')
+            </option>
 
-                {!! view_render_event('bagisto.shop.checkout.onepage.address.form.country.after') !!}
+            <option
+                v-for="country in countries"
+                :value="country.code"
+            >
+                @{{ country.name }}
+            </option>
+        </x-shop::form.control-group.control>
+    </template>
 
-                <!-- State -->
-                <x-shop::form.control-group>
-                    <x-shop::form.control-group.label class="{{ core()->isStateRequired() ? 'required' : '' }} !mt-0">
-                        @lang('shop::app.checkout.onepage.address.state')
-                    </x-shop::form.control-group.label>
+    <x-shop::form.control-group.error ::name="controlName + '.country'" />
+</x-shop::form.control-group>
 
-                    <template v-if="states">
-                        <template v-if="haveStates">
-                            <x-shop::form.control-group.control
-                                type="select"
-                                ::name="controlName + '.state'"
-                                rules="{{ core()->isStateRequired() ? 'required' : '' }}"
-                                ::value="address.state"
-                                :label="trans('shop::app.checkout.onepage.address.state')"
-                                :placeholder="trans('shop::app.checkout.onepage.address.state')"
-                            >
-                                <option value="">
-                                    @lang('shop::app.checkout.onepage.address.select-state')
-                                </option>
+{!! view_render_event('bagisto.shop.checkout.onepage.address.form.country.after') !!}
 
-                                <option
-                                    v-for='(state, index) in states[selectedCountry]'
-                                    :value="state.code"
-                                >
-                                    @{{ state.default_name }}
-                                </option>
-                            </x-shop::form.control-group.control>
-                        </template>
 
-                        <template v-else>
-                            <x-shop::form.control-group.control
-                                type="text"
-                                ::name="controlName + '.state'"
-                                ::value="address.state"
-                                rules="{{ core()->isStateRequired() ? 'required' : '' }}"
-                                :label="trans('shop::app.checkout.onepage.address.state')"
-                                :placeholder="trans('shop::app.checkout.onepage.address.state')"
-                            />
-                        </template>
-                    </template>
+<!-- State -->
+<x-shop::form.control-group class="!mb-4">
+    <x-shop::form.control-group.label class="{{ core()->isStateRequired() ? 'required' : '' }}">
+        @lang('shop::app.checkout.onepage.address.state')
+    </x-shop::form.control-group.label>
 
-                    <x-shop::form.control-group.error ::name="controlName + '.state'" />
-                </x-shop::form.control-group>
+    <!-- Si el país es Colombia -->
+    <template v-if="selectedCountry === 'CO'">
+        <x-shop::form.control-group.control
+            type="select"
+            ::name="controlName + '.state'"
+            v-model="address.state"
+            rules="{{ core()->isStateRequired() ? 'required' : '' }}"
+            @change="updateCities"
+            :label="trans('shop::app.checkout.onepage.address.state')"
+        >
+            <option value="">
+                @lang('shop::app.checkout.onepage.address.select-state')
+            </option>
 
-                {!! view_render_event('bagisto.shop.checkout.onepage.address.form.state.after') !!}
+            <option
+                v-for="(ciudades, departamento) in departamentos"
+                :value="departamento"
+            >
+                @{{ departamento }}
+            </option>
+        </x-shop::form.control-group.control>
+    </template>
+
+    <!-- Si no es Colombia y sí hay estados cargados por defecto -->
+    <template v-else-if="haveStates">
+        <x-shop::form.control-group.control
+            type="select"
+            ::name="controlName + '.state'"
+            v-model="address.state"
+            rules="{{ core()->isStateRequired() ? 'required' : '' }}"
+            :label="trans('shop::app.checkout.onepage.address.state')"
+        >
+            <option
+                v-for="state in countryStates[selectedCountry]"
+                :value="state.code"
+            >
+                @{{ state.default_name }}
+            </option>
+        </x-shop::form.control-group.control>
+    </template>
+
+    <!-- Si no hay estados disponibles -->
+    <template v-else>
+        <x-shop::form.control-group.control
+            type="text"
+            ::name="controlName + '.state'"
+            v-model="address.state"
+            rules="{{ core()->isStateRequired() ? 'required' : '' }}"
+            :label="trans('shop::app.checkout.onepage.address.state')"
+            :placeholder="trans('shop::app.checkout.onepage.address.state')"
+        />
+    </template>
+
+    <x-shop::form.control-group.error ::name="controlName + '.state'" />
+</x-shop::form.control-group>
+
+{!! view_render_event('bagisto.shop.checkout.onepage.address.form.state.after') !!}
+
+
+
             </div>
 
             <div class="grid grid-cols-2 gap-x-5 max-md:grid-cols-1">
-                <!-- City -->
-                <x-shop::form.control-group>
-                    <x-shop::form.control-group.label class="required !mt-0">
-                        @lang('shop::app.checkout.onepage.address.city')
-                    </x-shop::form.control-group.label>
+ 
+<!-- City -->
+<x-shop::form.control-group>
+    <x-shop::form.control-group.label class="required !mt-0">
+        @lang('shop::app.checkout.onepage.address.city')
+    </x-shop::form.control-group.label>
 
-                    <x-shop::form.control-group.control
-                        type="text"
-                        ::name="controlName + '.city'"
-                        ::value="address.city"
-                        rules="required"
-                        :label="trans('shop::app.checkout.onepage.address.city')"
-                        :placeholder="trans('shop::app.checkout.onepage.address.city')"
-                    />
+    <template v-if="selectedCountry === 'CO'">
+        <x-shop::form.control-group.control
+            type="select"
+            ::name="controlName + '.city'"
+            v-model="address.city"
+            rules="required"
+            @change="updateDaneCode"
+            :label="trans('shop::app.checkout.onepage.address.city')"
+        >
+            <option value="">
+                @lang('shop::app.checkout.onepage.address.select-city')
+            </option>
 
-                    <x-shop::form.control-group.error ::name="controlName + '.city'" />
-                </x-shop::form.control-group>
+            <option
+                v-for="ciudad in ciudadesDisponibles"
+                :value="ciudad.name"
+            >
+                @{{ ciudad.name }}
+            </option>
+        </x-shop::form.control-group.control>
+    </template>
+
+    <template v-else>
+        <x-shop::form.control-group.control
+            type="text"
+            ::name="controlName + '.city'"
+            v-model="address.city"
+            rules="required"
+            :label="trans('shop::app.checkout.onepage.address.city')"
+            :placeholder="trans('shop::app.checkout.onepage.address.city')"
+        />
+    </template>
+
+    <x-shop::form.control-group.error ::name="controlName + '.city'" />
+</x-shop::form.control-group>
 
                 {!! view_render_event('bagisto.shop.checkout.onepage.address.form.city.after') !!}
 
-                <!-- Postcode -->
-                <x-shop::form.control-group>
-                    <x-shop::form.control-group.label class="{{ core()->isPostCodeRequired() ? 'required' : '' }} !mt-0">
-                        @lang('shop::app.checkout.onepage.address.postcode')
-                    </x-shop::form.control-group.label>
-
-                    <x-shop::form.control-group.control
-                        type="text"
-                        ::name="controlName + '.postcode'"
-                        ::value="address.postcode"
-                        rules="{{ core()->isPostCodeRequired() ? 'required' : '' }}|postcode"
-                        :label="trans('shop::app.checkout.onepage.address.postcode')"
-                        :placeholder="trans('shop::app.checkout.onepage.address.postcode')"
-                    />
-
-                    <x-shop::form.control-group.error ::name="controlName + '.postcode'" />
-                </x-shop::form.control-group>
+<!-- Postcode (DANE) - oculto -->
+<x-shop::form.control-group.control
+    type="hidden"
+    ::name="controlName + '.postcode'"
+    v-model="address.postcode"
+/>
 
                 {!! view_render_event('bagisto.shop.checkout.onepage.address.form.postcode.after') !!}
             </div>
@@ -274,74 +327,131 @@
         </div>
     </script>
 
-    <script type="module">
-        app.component('v-checkout-address-form', {
-            template: '#v-checkout-address-form-template',
+<script type="module">
+    app.component('v-checkout-address-form', {
+        template: '#v-checkout-address-form-template',
 
-            props: {
-                controlName: {
-                    type: String,
-                    required: true,
-                },
-
-                address: {
-                    type: Object,
-
-                    default: () => ({
-                        id: 0,
-                        company_name: '',
-                        first_name: '',
-                        last_name: '',
-                        email: '',
-                        address: [],
-                        country: '',
-                        state: '',
-                        city: '',
-                        postcode: '',
-                        phone: '',
-                    }),
-                },
+        props: {
+            controlName: {
+                type: String,
+                required: true,
             },
 
-            data() {
-                return {
-                    selectedCountry: this.address.country,
+            address: {
+                type: Object,
+                default: () => ({
+                    id: 0,
+                    company_name: '',
+                    first_name: '',
+                    last_name: '',
+                    email: '',
+                    address: [],
+                    country: '',
+                    state: '',
+                    city: '',
+                    postcode: '',
+                    phone: '',
+                }),
+            },
+        },
 
-                    countries: [],
+        data() {
+            return {
+                countries: [],
+                countryStates: {},
 
-                    states: null,
+                selectedCountry: this.address.country,
+
+                departamentos: {},
+                ciudadesDisponibles: [],
+                daneCode: null,
+            };
+        },
+
+        computed: {
+            haveStates() {
+                return !!this.countryStates[this.address.country]?.length;
+            },
+        },
+
+mounted() {
+    this.getCountries();
+    this.getStates();
+
+    fetch('/data/departamentos_colombia.json')
+        .then(response => response.json())
+        .then(data => {
+            this.departamentos = data;
+
+            if (this.address.country === 'CO' && this.address.state) {
+                this.updateCities();
+            }
+
+            if (
+                this.address.country === 'CO' &&
+                this.address.state &&
+                this.address.city
+            ) {
+                this.updateDaneCode();
+            }
+        });
+},
+
+        methods: {
+            getCountries() {
+                this.$axios.get("{{ route('shop.api.core.countries') }}")
+                    .then(response => {
+                        this.countries = response.data.data;
+                    });
+            },
+
+            getStates() {
+                this.$axios.get("{{ route('shop.api.core.states') }}")
+                    .then(response => {
+                        this.countryStates = response.data.data;
+                    });
+            },
+
+            updateCities() {
+                const departamento = this.address.state;
+                this.ciudadesDisponibles = this.departamentos[departamento] || [];
+
+                //this.address.city = '';
+                this.daneCode = null;
+                this.address.postcode = '';
+            },
+
+            updateDaneCode() {
+                const ciudadSeleccionada = this.ciudadesDisponibles.find(
+                    c => c.name === this.address.city
+                );
+
+                this.daneCode = ciudadSeleccionada ? ciudadSeleccionada.dane : null;
+                this.address.postcode = this.daneCode ?? '';
+            }
+        },
+
+        watch: {
+            selectedCountry(newVal) {
+                this.address.country = newVal;
+
+                if (newVal === 'CO' && this.address.state) {
+                    this.updateCities();
                 }
             },
 
-            computed: {
-                haveStates() {
-                    return !! this.states[this.selectedCountry]?.length;
-                },
+            'address.state': function () {
+                if (this.address.country === 'CO') {
+                    this.updateCities();
+                }
             },
 
-            mounted() {
-                this.getCountries();
-
-                this.getStates();
-            },
-
-            methods: {
-                getCountries() {
-                    this.$axios.get("{{ route('shop.api.core.countries') }}")
-                        .then(response => {
-                            this.countries = response.data.data;
-                        })
-                        .catch(() => {});
-                },
-
-                getStates() {
-                    this.$axios.get("{{ route('shop.api.core.states') }}")
-                        .then(response => {
-                            this.states = response.data.data;
-                        })
-                        .catch(() => {});
-                },
+            'address.city': function () {
+                if (this.address.country === 'CO') {
+                    this.updateDaneCode();
+                }
             }
-        });
-    </script>
+        }
+    });
+</script>
 @endPushOnce

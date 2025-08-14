@@ -18,11 +18,13 @@
 
     @php
         $method = strtoupper($method);
+        // Asegurar que $errors esté disponible - Corrección GolobaTheme
+        $errorMessages = isset($errors) ? $errors->getMessages() : [];
     @endphp
 
     <v-form
         method="{{ $method === 'GET' ? 'GET' : 'POST' }}"
-        :initial-errors="{{ json_encode($errors->getMessages()) }}"
+        :initial-errors="{{ json_encode($errorMessages) }}"
         v-slot="{ meta, errors }"
         {{ $attributes }}
     >

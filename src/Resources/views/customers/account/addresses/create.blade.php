@@ -153,7 +153,7 @@
                         <x-shop::form.control-group.control
                             type="text"
                             name="address[]"
-                            rules="required|address"
+                            rules="required"
                             :value="collect(old('address'))->first()"
                             :label="trans('shop::app.customers.account.addresses.create.street-address')"
                             :placeholder="trans('shop::app.customers.account.addresses.create.street-address')"
@@ -205,9 +205,10 @@
                                 @lang('shop::app.customers.account.addresses.create.select-country')
                             </option>
             
-                            @foreach (core()->countries() as $country)
+                            {{-- @foreach (core()->countries() as $country)
                                 <option value="{{ $country->code }}">{{ $country->name }}</option>
-                            @endforeach
+                            @endforeach --}}
+                            <option value="CO">Colombia</option>
                         </x-shop::form.control-group.control>
             
                         <x-shop::form.control-group.error control-name="country" />
@@ -218,16 +219,38 @@
                         <x-shop::form.control-group.label class="{{ core()->isStateRequired() ? 'required' : '' }}">
                             @lang('shop::app.customers.account.addresses.create.state')
                         </x-shop::form.control-group.label>
-        
-                        <template v-if="haveStates()">
+
+                        <!-- Si el país es CO, usa los departamentos de Colombia -->
+                        <template v-if="country === 'CO'">
                             <x-shop::form.control-group.control
                                 type="select"
-                                id="state"
+                                name="state"
+                                rules="{{ core()->isStateRequired() ? 'required' : '' }}"
+                                v-model="state"
+                                @change="updateCities"
+                                :label="trans('shop::app.customers.account.addresses.create.state')"
+                            >
+                                <option value="">
+                                    @lang('shop::app.customers.account.addresses.create.select-state')
+                                </option>
+
+                                <option 
+                                    v-for="(ciudades, departamento) in departamentos" 
+                                    :value="departamento"
+                                >
+                                    @{{ departamento }}
+                                </option>
+                            </x-shop::form.control-group.control>
+                        </template>
+
+                        <!-- Si hay estados disponibles por defecto -->
+                        <template v-else-if="haveStates()">
+                            <x-shop::form.control-group.control
+                                type="select"
                                 name="state"
                                 rules="{{ core()->isStateRequired() ? 'required' : '' }}"
                                 v-model="state"
                                 :label="trans('shop::app.customers.account.addresses.create.state')"
-                                :placeholder="trans('shop::app.customers.account.addresses.create.state')"
                             >
                                 <option 
                                     v-for='(state, index) in countryStates[country]'
@@ -237,62 +260,54 @@
                                 </option>
                             </x-shop::form.control-group.control>
                         </template>
-        
+
+                        <!-- Campo de texto si no hay estados -->
                         <template v-else>
                             <x-shop::form.control-group.control
                                 type="text"
                                 name="state"
-                                :value="old('state')"
                                 rules="{{ core()->isStateRequired() ? 'required' : '' }}"
+                                v-model="state"
                                 :label="trans('shop::app.customers.account.addresses.create.state')"
                                 :placeholder="trans('shop::app.customers.account.addresses.create.state')"
                             />
                         </template>
-        
+
                         <x-shop::form.control-group.error control-name="state" />
                     </x-shop::form.control-group>
 
                     {!! view_render_event('bagisto.shop.customers.account.addresses.create_form_controls.state.after') !!}
 
-                    <!-- City -->
+                    <!-- City (Dropdown dinámico por estado) -->
                     <x-shop::form.control-group>
                         <x-shop::form.control-group.label class="required">
                             @lang('shop::app.customers.account.addresses.create.city')
                         </x-shop::form.control-group.label>
 
                         <x-shop::form.control-group.control
-                            type="text"
+                            type="select"
                             name="city"
                             rules="required"
-                            :value="old('city')"
+                            v-model="address.city"
+                            @change="updateDaneCode"
                             :label="trans('shop::app.customers.account.addresses.create.city')"
-                            :placeholder="trans('shop::app.customers.account.addresses.create.city')"
-                        />
+                        >
+                            <option value="">
+                                @lang('shop::app.customers.account.addresses.create.select-city')
+                            </option>
+
+                            <option v-for="city in ciudadesDisponibles" :value="city.name">
+                                @{{ city.name }}
+                            </option>
+                        </x-shop::form.control-group.control>
 
                         <x-shop::form.control-group.error control-name="city" />
                     </x-shop::form.control-group>
 
-                    {!! view_render_event('bagisto.shop.customers.account.addresses.create_form_controls.city.after') !!}
-
-                    <!-- Post Code -->
-                    <x-shop::form.control-group>
-                        <x-shop::form.control-group.label class="{{ core()->isPostCodeRequired() ? 'required' : '' }}">
-                            @lang('shop::app.customers.account.addresses.create.post-code')
-                        </x-shop::form.control-group.label>
-
-                        <x-shop::form.control-group.control
-                            type="text"
-                            name="postcode"
-                            rules="{{ core()->isPostCodeRequired() ? 'required' : '' }}|postcode"
-                            :value="old('postcode')"
-                            :label="trans('shop::app.customers.account.addresses.create.post-code')"
-                            :placeholder="trans('shop::app.customers.account.addresses.create.post-code')"
-                        />
-
-                        <x-shop::form.control-group.error control-name="postcode" />
-                    </x-shop::form.control-group>
-
                     {!! view_render_event('bagisto.shop.customers.account.addresses.create_form_controls.postcode.after') !!}
+
+                    <!-- Postcode (se guarda la informació del código DANE de la ciudad seleccionada) -->
+                    <input type="hidden" name="postcode" :value="daneCode">
 
                     <!-- Contact -->
                     <x-shop::form.control-group>
@@ -354,29 +369,87 @@
         <script type="module">
             app.component('v-create-customer-address', {
                 template: '#v-create-customer-address-template',
-    
                 data() {
                     return {
                         country: "{{ old('country') }}",
-
                         state: "{{ old('state') }}",
-
                         countryStates: @json(core()->groupedStatesByCountries()),
-                    }
+
+                        departamentos: {},
+                        ciudadesDisponibles: [],
+                        daneCode: null,
+                        address: {
+                            state: '',
+                            city: ''
+                        },
+                        errors: {}
+                    };
                 },
-    
+                mounted() {
+                    fetch('/data/departamentos_colombia.json')
+                        .then(response => response.json())
+                        .then(data => {
+                            this.departamentos = data;
+                        });
+                },
                 methods: {
                     haveStates() {
-                        /*
-                        * The double negation operator is used to convert the value to a boolean.
-                        * It ensures that the final result is a boolean value,
-                        * true if the array has a length greater than 0, and otherwise false.
-                        */
                         return !!this.countryStates[this.country]?.length;
                     },
+                    updateCities() {
+                        this.address.state = this.state;
+                        this.ciudadesDisponibles = this.departamentos[this.address.state] || [];
+                        this.address.city = '';
+                        this.daneCode = null;
+                    },
+                    updateDaneCode() {
+                        const ciudadSeleccionada = this.ciudadesDisponibles.find(
+                            c => c.name === this.address.city
+                        );
+                        this.daneCode = ciudadSeleccionada ? ciudadSeleccionada.dane : null;
+                    }
                 }
             });
         </script>
     @endpush
 
 </x-shop::layouts.account>
+
+        <script>
+            app.component('v-create-customer-address', {
+                template: '#v-create-customer-address-template',
+                data() {
+                    return {
+                        departamentos: {},
+                        ciudadesDisponibles: [],
+                        daneCode: null,
+                        address: {
+                            state: '',
+                            city: ''
+                        },
+                        errors: {}
+                    };
+                },
+                mounted() {
+                    fetch('/data/departamentos_colombia.json')
+                        .then(response => response.json())
+                        .then(data => {
+                            this.departamentos = data;
+                        });
+                },
+                methods: {
+                    updateCities() {
+                        this.address.state = this.state;
+                        this.ciudadesDisponibles = this.departamentos[this.address.state] || [];
+                        this.address.city = '';
+                        this.daneCode = null;
+                    },
+                    updateDaneCode() {
+                        const ciudadSeleccionada = this.ciudadesDisponibles.find(
+                            c => c.name === this.address.city
+                        );
+                        this.daneCode = ciudadSeleccionada ? ciudadSeleccionada.dane : null;
+                    }
+                }
+            });
+        </script>

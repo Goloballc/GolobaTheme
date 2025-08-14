@@ -9,17 +9,46 @@
     :has-header="false"
     :has-feature="false"
     :has-footer="false"
+    background-class="bg-transparent"
 >
     <!-- Page Title -->
     <x-slot:title>
         @lang('shop::app.customers.forgot-password.title')
     </x-slot>
 
-    <div class="container mt-20 max-1180:px-5 max-md:mt-12">
+    <!-- Picture Element with Responsive Background -->
+    <picture class="fixed inset-0 -z-10">
+        <!-- PC/Desktop (1366px+) -->
+        <source 
+            media="(min-width: 1366px)" 
+            srcset="{{ bagisto_asset('images/bg_login_pc.webp') }}"
+        >
+        
+        <!-- Tablet (768px - 1365px) -->
+        <source 
+            media="(min-width: 768px)" 
+            srcset="{{ bagisto_asset('images/bg_login_tablet.webp') }}"
+        >
+        
+        <!-- Mobile (hasta 767px) -->
+        <source 
+            media="(max-width: 767px)" 
+            srcset="{{ bagisto_asset('images/bg_login_mobile.webp') }}"
+        >
+        
+        <!-- Fallback image -->
+        <img 
+            src="{{ bagisto_asset('images/bg_login_pc.webp') }}" 
+            alt="Background" 
+            class="h-full w-full object-cover object-top"
+        >
+    </picture>
+
+    <div class="container mt-20 max-1180:px-5 max-md:mt-12 relative z-10">
         {!! view_render_event('bagisto.shop.customers.forget_password.logo.before') !!}
 
         <!-- Company Logo -->
-        <div class="flex items-center gap-x-14 max-[1180px]:gap-x-9">
+        <!-- <div class="flex items-center gap-x-14 max-[1180px]:gap-x-9">
             <a
                 href="{{ route('shop.home.index') }}"
                 class="m-[0_auto_20px_auto]"
@@ -32,13 +61,13 @@
                     height="29"
                 >
             </a>
-        </div>
+        </div> -->
 
         {!! view_render_event('bagisto.shop.customers.forget_password.logo.after') !!}
 
         <!-- Form Container -->
         <div
-            class="m-auto w-full max-w-[870px] rounded-xl border border-zinc-200 p-16 px-[90px] max-md:px-8 max-md:py-8 max-sm:border-none max-sm:p-0"
+            class="bg-white m-auto w-full max-w-[870px] rounded-xl border border-zinc-200 p-16 px-[90px] max-md:px-8 max-md:py-8 max-sm:border-none max-sm:p-4"
         >
             <h1 class="font-dmserif text-4xl max-md:text-3xl max-sm:text-xl">
                 @lang('shop::app.customers.forgot-password.title')
@@ -61,7 +90,7 @@
 
                         <x-shop::form.control-group.control
                             type="email"
-                            class="px-6 py-4 max-sm:py-1.5"
+                            class="bg-grayGolobaSemiLight px-6 py-4 max-sm:py-1.5"
                             name="email"
                             rules="required|email"
                             value=""
@@ -95,7 +124,7 @@
                     <p class="mt-5 font-medium text-zinc-500 max-sm:text-center max-sm:text-sm">
                         @lang('shop::app.customers.forgot-password.back')
 
-                        <a class="text-navyBlue"
+                        <a class="text-magentaGoloba"
                             href="{{ route('shop.customer.session.index') }}"
                         >
                             @lang('shop::app.customers.forgot-password.sign-in-button')

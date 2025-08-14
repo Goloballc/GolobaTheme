@@ -27,6 +27,7 @@
     align-items: center;
     gap: 12px;
     line-height: 1.5;
+    background: #B12C9E;
 ">
     <span>
         Usamos cookies para mejorar tu experiencia en el sitio. 

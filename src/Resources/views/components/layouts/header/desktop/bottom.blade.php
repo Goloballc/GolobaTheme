@@ -18,7 +18,9 @@
                     <label for="organic-search" class="sr-only">
                         @lang('shop::app.components.layouts.header.search')
                     </label>
-                    <div class="icon-search pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-xl"></div>
+                    <div class="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-xl">
+                        <img class="w-4" src="{{ bagisto_asset('images/search-icon.png') }}">
+                    </div>
                     <input type="text" name="query" value="{{ request('query') }}"
                            class="block w-full rounded-lg border border-transparent bg-zinc-100 pl-11 pr-11 py-3 text-xs font-medium text-gray-900 transition-all hover:border-gray-400 focus:border-gray-400"
                            minlength="{{ core()->getConfigData('catalog.products.search.min_query_length') }}"
@@ -41,9 +43,11 @@
                     <span class="icon-compare text-2xl"></span>
                 </a>
             @endif
+            {!! view_render_event('bagisto.shop.components.layouts.header.desktop.bottom.mini_cart.before') !!}
             @if(core()->getConfigData('sales.checkout.shopping_cart.cart_page'))
                 @include('shop::checkout.cart.mini-cart')
             @endif
+            {!! view_render_event('bagisto.shop.components.layouts.header.desktop.bottom.mini_cart.after') !!}
             <x-shop::dropdown position="bottom-right">
                 <x-slot:toggle>
                     <span class="icon-users text-2xl cursor-pointer" role="button" tabindex="0"></span>
@@ -52,7 +56,7 @@
                 @guest('customer')
                     <x-slot:content>
                         <div class="grid gap-2.5">
-                            <p class="font-dmserif text-xl">
+                            <p class="font-semibold text-xl">
                                 @lang('shop::app.components.layouts.header.welcome-guest')
                             </p>
 
@@ -65,12 +69,12 @@
 
                         <div class="mt-6 flex gap-4">
                             <a href="{{ route('shop.customer.session.create') }}"
-                                class="primary-button m-0 mx-auto block w-max rounded-2xl px-7 text-center text-base max-md:rounded-lg">
+                                class="primary-button rounded-full m-0 mx-auto block w-max rounded-2xl px-7 text-center text-base max-md:rounded-lg">
                                 @lang('shop::app.components.layouts.header.sign-in')
                             </a>
 
                             <a href="{{ route('shop.customers.register.index') }}"
-                                class="secondary-button m-0 mx-auto block w-max rounded-2xl border-2 px-7 text-center text-base max-md:rounded-lg max-md:py-3">
+                                class="green-button rounded-full m-0 mx-auto block w-max rounded-2xl border-2 px-7 text-center text-base max-md:rounded-lg max-md:py-3">
                                 @lang('shop::app.components.layouts.header.sign-up')
                             </a>
                         </div>
@@ -81,7 +85,7 @@
                 @auth('customer')
                     <x-slot:content class="!p-0">
                         <div class="grid gap-2.5 p-5 pb-0">
-                            <p class="font-dmserif text-xl">
+                            <p class="text-xl">
                                 @lang('shop::app.components.layouts.header.welcome')
                                 {{ auth()->guard('customer')->user()->first_name }}
                             </p>
@@ -132,8 +136,8 @@
         <v-desktop-category>
             <div class="shimmer h-6 w-24 rounded" role="presentation"></div>
         </v-desktop-category>
-        <a href="#" class="cursor-pointer px-5 text-base font-semibold text-black hover:text-[#e91e63] transition-colors">Ofertas</a>
-        <a href="#" class="cursor-pointer px-5 text-base font-semibold text-black hover:text-[#e91e63] transition-colors">Ayuda</a>
+        <a href="#" class="text-lg cursor-pointer px-5 text-base font-semibold text-black hover:text-[#e91e63] transition-colors">Ofertas</a>
+        <a href="#" class="text-lg cursor-pointer px-5 text-base font-semibold text-black hover:text-greenGoloba transition-colors">Ayuda</a>
         {!! view_render_event('bagisto.shop.components.layouts.header.desktop.bottom.category.after') !!}
     </div>
 </div>
@@ -145,17 +149,17 @@
         <div class="group relative flex h-[48px] items-center"
              @mouseenter="showCategories = true"
              @mouseleave="showCategories = false">
-            <span ref="categoryButton" class="cursor-pointer px-5 text-base font-semibold text-black hover:text-[#e91e63] transition-colors">Categorías</span>
+            <span ref="categoryButton" class="text-lg cursor-pointer px-5 text-base font-semibold text-black hover:text-greenGoloba transition-colors">Categorías</span>
             <div v-show="showCategories"
                  class="fixed z-[1000] w-[90vw] max-w-[1200px] left-1/2 -translate-x-1/2 shadow-xl"
                  style="top: 135px;">
                 <div class="flex">
-                    <div class="w-64 bg-pinkGoloba text-white">
+                    <div class="w-64 bg-magentaGoloba text-white">
                         <ul class="py-4">
                             <li v-for="(category, index) in categories" :key="category.id"
                                 @mouseenter="hoveredCategory = index" class="relative">
-                                <a :href="category.url" class="block px-6 py-3 text-sm hover:bg-[#d81b60] transition-colors"
-                                   :class="{ 'bg-[#d81b60]': hoveredCategory === index }">
+                                <a :href="category.url" class="block px-6 py-3 text-sm hover:text-black hover:bg-grayGolobaLight transition-colors"
+                                   :class="{ 'bg-grayGolobaLight text-black': hoveredCategory === index }">
                                     @{{ category.name }}
                                 </a>
                             </li>
@@ -170,7 +174,7 @@
                                 <div class="grid grid-cols-4 gap-8">
                                     <div v-for="secondLevel in categories[hoveredCategory].children" :key="secondLevel.id" class="space-y-2">
                                         <a :href="secondLevel.url"
-                                           class="block text-base font-semibold text-gray-900 hover:text-[#e91e63] transition-colors">
+                                           class="block text-base font-semibold text-gray-900 hover:text-greenGoloba transition-colors">
                                             @{{ secondLevel.name }}
                                         </a>
                                         <ul v-if="secondLevel.children.length > 0" class="space-y-1">

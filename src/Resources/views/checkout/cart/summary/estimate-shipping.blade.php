@@ -30,96 +30,102 @@
                 <p class="mb-4 max-sm:text-sm">
                     @lang('shop::app.checkout.cart.summary.estimate-shipping.info')
                 </p>
-                
+
                 <!-- Country -->
                 <x-shop::form.control-group class="!mb-2.5">
-                    <x-shop::form.control-group.label class="{{ core()->isCountryRequired() ? 'required' : '' }}">
-                        @lang('shop::app.checkout.cart.summary.estimate-shipping.country')
+                    <x-shop::form.control-group.label class="required">
+                        País
                     </x-shop::form.control-group.label>
 
                     <x-shop::form.control-group.control
                         type="select"
                         name="country"
                         v-model="selectedCountry"
-                        rules="{{ core()->isCountryRequired() ? 'required' : '' }}"
-                        :label="trans('shop::app.checkout.cart.summary.estimate-shipping.country')"
-                        :placeholder="trans('shop::app.checkout.cart.summary.estimate-shipping.country')"
+                        rules="required"
+                        :label="'País'"
+                        :placeholder="'País'"
                     >
-                        <option value="">
-                            @lang('shop::app.checkout.cart.summary.estimate-shipping.select-country')
-                        </option>
-
-                        <option
-                            v-for="country in countries"
-                            :value="country.code"
-                            v-text="country.name"
-                        >
-                        </option>
+                        <option value="">Seleccione un país</option>
+                        <option value="CO">Colombia</option>
                     </x-shop::form.control-group.control>
 
                     <x-shop::form.control-group.error name="country" />
                 </x-shop::form.control-group>
 
-                {!! view_render_event('bagisto.shop.checkout.onepage.address.form.country.after') !!}
-
                 <!-- State -->
                 <x-shop::form.control-group>
-                    <x-shop::form.control-group.label class="{{ core()->isStateRequired() ? 'required' : '' }}">
-                        @lang('shop::app.checkout.cart.summary.estimate-shipping.state')
+                    <x-shop::form.control-group.label class="required">
+                        Departamento
                     </x-shop::form.control-group.label>
 
-                    <template v-if="states">
-                        <template v-if="haveStates">
-                            <x-shop::form.control-group.control
-                                type="select"
-                                name="state"
-                                rules="{{ core()->isStateRequired() ? 'required' : '' }}"
-                                :label="trans('shop::app.checkout.cart.summary.estimate-shipping.state')"
-                                :placeholder="trans('shop::app.checkout.cart.summary.estimate-shipping.state')"
-                            >
-                                <option value="">
-                                    @lang('shop::app.checkout.cart.summary.estimate-shipping.select-state')
-                                </option>
+                    <x-shop::form.control-group.control
+                        type="select"
+                        name="state"
+                        v-model="selectedDepartamento"
+                        rules="required"
+                        :label="'Departamento'"
+                        :placeholder="'Departamento'"
+                    >
+                        <option value="">Seleccione un departamento</option>
 
-                                <option
-                                    v-for='(state, index) in states[selectedCountry]'
-                                    :value="state.code"
-                                >
-                                    @{{ state.default_name }}
-                                </option>
-                            </x-shop::form.control-group.control>
-                        </template>
-
-                        <template v-else>
-                            <x-shop::form.control-group.control
-                                type="text"
-                                name="state"
-                                rules="{{ core()->isStateRequired() ? 'required' : '' }}"
-                                :label="trans('shop::app.checkout.cart.summary.estimate-shipping.state')"
-                                :placeholder="trans('shop::app.checkout.cart.summary.estimate-shipping.state')"
-                            />
-                        </template>
-                    </template>
+                        <option
+                            v-for="(ciudades, departamento) in departamentos"
+                            :key="departamento"
+                            :value="departamento"
+                        >
+                            @{{ departamento }}
+                        </option>
+                    </x-shop::form.control-group.control>
 
                     <x-shop::form.control-group.error name="state" />
                 </x-shop::form.control-group>
 
+                <!-- City -->
+                <x-shop::form.control-group>
+                    <x-shop::form.control-group.label class="required">
+                        Ciudad
+                    </x-shop::form.control-group.label>
+
+                    <x-shop::form.control-group.control
+                        type="select"
+                        name="city"
+                        v-model="selectedCiudad"
+                        rules="required"
+                        :label="'Ciudad'"
+                        :placeholder="'Ciudad'"
+                    >
+                        <option value="">Seleccione una ciudad</option>
+
+                        <option
+                            v-for="ciudad in ciudadesDisponibles"
+                            :key="ciudad.dane"
+                            :value="ciudad.name"
+                        >
+                            @{{ ciudad.name }}
+                        </option>
+                    </x-shop::form.control-group.control>
+
+                    <x-shop::form.control-group.error name="city" />
+                </x-shop::form.control-group>
+
                 <!-- Postcode -->
                 <x-shop::form.control-group class="!mb-0">
-                    <x-shop::form.control-group.label class="{{ core()->isPostCodeRequired() ? 'required' : '' }}">
+                    <x-shop::form.control-group.label class="required">
                         @lang('shop::app.checkout.cart.summary.estimate-shipping.postcode')
                     </x-shop::form.control-group.label>
 
                     <x-shop::form.control-group.control
                         type="text"
                         name="postcode"
-                        rules="{{ core()->isPostCodeRequired() ? 'required' : '' }}|postcode"
+                        v-model="daneCode"
+                        readonly
+                        rules="required|postcode"
                         :label="trans('shop::app.checkout.cart.summary.estimate-shipping.postcode')"
                         :placeholder="trans('shop::app.checkout.cart.summary.estimate-shipping.postcode')"
                     />
 
                     <x-shop::form.control-group.error control-name="postcode" />
-                </x-shop::form.control-group>
+                </x-shop::form-control-group>
 
                 <!-- Estimated Shipping Methods -->
                 <div
@@ -151,7 +157,7 @@
                                 <p class="text-2xl font-semibold max-md:text-lg">
                                     @{{ rate.base_formatted_price }}
                                 </p>
-                                
+
                                 <p class="mt-2.5 text-xs font-medium max-md:mt-0">
                                     <span class="font-medium">@{{ rate.method_title }}</span> - @{{ rate.method_description }}
                                 </p>
@@ -168,57 +174,58 @@
     <script type="module">
         app.component('v-estimate-tax-shipping', {
             template: '#v-estimate-tax-shipping-template',
-            
+
             props: ['cart'],
 
             data() {
                 return {
-                    selectedCountry: '',
-
-                    countries: [],
-
-                    states: null,
-
+                    selectedCountry: 'CO',
+                    selectedDepartamento: '',
+                    selectedCiudad: '',
+                    daneCode: '',
+                    departamentos: {},
+                    ciudadesDisponibles: [],
                     methods: [],
-
                     isStoring: false,
+                };
+            },
+
+            watch: {
+                selectedDepartamento(nuevoDepartamento) {
+                    this.selectedCiudad = '';
+                    this.daneCode = '';
+
+                    if (nuevoDepartamento && this.departamentos[nuevoDepartamento]) {
+                        this.ciudadesDisponibles = this.departamentos[nuevoDepartamento];
+                    } else {
+                        this.ciudadesDisponibles = [];
+                    }
+                },
+
+                selectedCiudad(nuevaCiudad) {
+                    if (this.selectedDepartamento && nuevaCiudad) {
+                        const ciudad = this.departamentos[this.selectedDepartamento]?.find(ci => ci.name === nuevaCiudad);
+                        this.daneCode = ciudad?.dane || '';
+                    } else {
+                        this.daneCode = '';
+                    }
                 }
             },
 
-            computed: {
-                haveStates() {
-                    return !! this.states[this.selectedCountry]?.length;
-                },
-            },
-
             mounted() {
-                this.getCountries();
-
-                this.getStates();
+                fetch('/data/departamentos_colombia.json')
+                    .then(response => response.json())
+                    .then(data => {
+                        this.departamentos = data;
+                    });
             },
 
             methods: {
-                getCountries() {
-                    this.$axios.get("{{ route('shop.api.core.countries') }}")
-                        .then(response => {
-                            this.countries = response.data.data;
-                        })
-                        .catch(() => {});
-                },
-
-                getStates() {
-                    this.$axios.get("{{ route('shop.api.core.states') }}")
-                        .then(response => {
-                            this.states = response.data.data;
-                        })
-                        .catch(() => {});
-                },
-
                 estimateShipping(params, { setErrors }) {
                     this.isStoring = true;
 
                     Object.keys(params).forEach(key => params[key] == null && delete params[key]);
-                    
+
                     this.$axios.post('{{ route('shop.api.checkout.cart.estimate_shipping') }}', params)
                         .then((response) => {
                             this.isStoring = false;
