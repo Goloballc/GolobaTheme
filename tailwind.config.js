@@ -35,8 +35,11 @@ module.exports = {
                 darkBlue: '#0044F2',
                 darkPink: '#F85156',
                 greenGoloba: '#B4D241',
-                pinkGoloba: '#B12C9E',
+                magentaGoloba: '#B12C9E',
                 grayGoloba: '#706F6F',
+                grayGolobaSemiLight: '#E6E6E6',
+                grayGolobaLight: '#D9D9D9',
+                grayGolobaDark: '#2E2E2E',
             },
 
             fontFamily: {
