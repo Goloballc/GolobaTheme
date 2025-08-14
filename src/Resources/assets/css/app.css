@@ -428,7 +428,7 @@ img.lazy {
     }
 
     .primary-button {
-        @apply flex gap-x-1.5 items-center place-content-center font-medium rounded-xl text-white bg-navyBlue border border-navyBlue px-8 py-4 max-w-max cursor-pointer transition-all hover:opacity-[0.9];
+        @apply flex gap-x-1.5 items-center place-content-center font-medium rounded-xl text-white bg-magentaGoloba border border-magentaGoloba px-8 py-4 max-w-max cursor-pointer transition-all hover:opacity-[0.9];
     }
     
     .secondary-button {
@@ -481,7 +481,7 @@ img.lazy {
         inset: 0;
         display: grid;
         place-content: center;
-        font-family: 'DM Serif Display';
+        font-family: 'Poppins';
         overflow: hidden;
         letter-spacing: 24px;
     }
@@ -521,5 +521,40 @@ img.lazy {
 
     .skip-to-main-content-link:focus {
         @apply ltr:left-1/2 rtl:right-1/2 ltr:translate-x-1/2 rtl:translate-x-[-50%] opacity-100;
+    }
+
+    .green-button {
+        @apply flex gap-x-1.5 items-center place-content-center font-medium rounded-xl text-white bg-greenGoloba border border-greenGoloba px-8 py-4 max-w-max cursor-pointer transition-all hover:opacity-[0.9];
+        box-shadow: 0 0 0 2px white inset;
+    }
+
+    .icon-truck::before, .icon-product::before, .icon-dollar-sign::before, .icon-support::before {
+        content: none;
+    }
+
+    .icon-truck, .icon-product, .icon-dollar-sign, .icon-support {
+        background-color: white;
+        background-size: 32px;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+
+    .icon-truck {
+        background-image: url('../images/envio.png');
+    }
+
+    .icon-product {
+        background-image: url('../images/devoluciones.png');
+    }
+
+    .icon-dollar-sign {
+        background-image: url('../images/pagos.png');
+    }
+
+    .icon-support {
+        background-image: url('../images/soporte.png');
+    }
+    .quantity-changer-container .icon-minus, .quantity-changer-container .icon-plus, .quantity-changer-container .quantity-changer-number {
+        @apply font-bold;
     }
 }
