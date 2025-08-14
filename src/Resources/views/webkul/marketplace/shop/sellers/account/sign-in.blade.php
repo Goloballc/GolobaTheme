@@ -9,17 +9,46 @@
     :has-header="false"
     :has-feature="false"
     :has-footer="false"
+    background-class="bg-transparent"
 >
     <!-- Page Title -->
     <x-slot:title>
         @lang('marketplace::app.shop.sellers.account.login.page-title')
     </x-slot>
 
-    <div class="container mt-20 max-1180:px-5">
+    <!-- Picture Element with Responsive Background -->
+    <picture class="fixed inset-0 -z-10">
+        <!-- PC/Desktop (1366px+) -->
+        <source 
+            media="(min-width: 1366px)" 
+            srcset="{{ bagisto_asset('images/bg_login_pc.webp') }}"
+        >
+        
+        <!-- Tablet (768px - 1365px) -->
+        <source 
+            media="(min-width: 768px)" 
+            srcset="{{ bagisto_asset('images/bg_login_tablet.webp') }}"
+        >
+        
+        <!-- Mobile (hasta 767px) -->
+        <source 
+            media="(max-width: 767px)" 
+            srcset="{{ bagisto_asset('images/bg_login_mobile.webp') }}"
+        >
+        
+        <!-- Fallback image -->
+        <img 
+            src="{{ bagisto_asset('images/bg_login_pc.webp') }}" 
+            alt="Background" 
+            class="h-full w-full object-cover object-top"
+        >
+    </picture>
+
+    <div class="container mt-20 max-1180:px-5 relative z-10">
         {!! view_render_event('marketplace.seller.account.sign_in.logo.before') !!}
         
         <!-- Company Logo -->
-        <div class="flex items-center gap-x-14 max-[1180px]:gap-x-9">
+        <!-- <div class="flex items-center gap-x-14 max-[1180px]:gap-x-9">
             <a
                 href="{{ route('shop.home.index') }}"
                 class="m-[0_auto_20px_auto]"
@@ -32,15 +61,15 @@
                     height="29"
                 >
             </a>
-        </div>
+        </div> -->
 
         {!! view_render_event('marketplace.seller.account.sign_in.logo.after') !!}
 
         <!-- Form Container -->
         <div
-            class="m-auto w-full max-w-[870px] rounded-xl border border-[#E9E9E9] p-16 px-[90px] max-md:px-8 max-md:py-8"
+            class="bg-white m-auto w-full max-w-[870px] rounded-xl shadow-md p-16 px-[90px] max-md:px-8 max-md:py-8 max-sm:p-4"
         >
-            <h1 class="font-dmserif text-4xl max-sm:text-2xl">
+            <h1 class="font-medium text-4xl max-sm:text-2xl">
                 @lang('marketplace::app.shop.sellers.account.login.page-title')
             </h1>
             
@@ -62,7 +91,7 @@
 
                         <x-shop::form.control-group.control
                             type="email"
-                            class="rounded-lg !p-[20px_25px]"
+                            class="bg-grayGolobaSemiLight rounded-lg !p-[20px_25px]"
                             name="email"
                             rules="required|email"
                             value=""
@@ -85,7 +114,7 @@
 
                         <x-shop::form.control-group.control
                             type="password"
-                            class="rounded-lg !p-[20px_25px]"
+                            class="bg-grayGolobaSemiLight rounded-lg !p-[20px_25px]"
                             id="password"
                             name="password"
                             rules="required|min:6"
@@ -111,12 +140,12 @@
                             />
 
                             <label
-                                class="icon-uncheck peer-checked:icon-check-box cursor-pointer text-2xl text-navyBlue peer-checked:text-navyBlue"
+                                class="icon-uncheck peer-checked:icon-check-box cursor-pointer text-2xl text-magentaGoloba peer-checked:text-magentaGoloba"
                                 for="show-password"
                             ></label>
 
                             <label
-                                class="cursor-pointer select-none text-base text-[#6E6E6E] max-sm:text-xs ltr:pl-0 rtl:pr-0"
+                                class="cursor-pointer select-none text-base text-magentaGoloba max-sm:text-xs ltr:pl-0 rtl:pr-0"
                                 for="show-password"
                             >
                                 @lang('marketplace::app.shop.sellers.account.login.show-password')
@@ -128,7 +157,7 @@
                         <div class="block">
                             <a
                                 href="{{ route('marketplace.seller.forgot_password.create') }}"
-                                class="cursor-pointer text-base text-black max-sm:text-xs"
+                                class="cursor-pointer text-base text-magentaGoloba max-sm:text-xs"
                             >
                                 <span>
                                     @lang('marketplace::app.shop.sellers.account.login.forgot-pass')
@@ -153,14 +182,14 @@
                     <!-- Submit Button -->
                     <div class="mt-8 flex flex-wrap items-center gap-9">
                         <button
-                            class="primary-button m-0 block w-full max-w-[374px] rounded-2xl px-11 py-4 text-center text-base ltr:ml-0 rtl:mr-0"
+                            class="primary-button m-0 block w-full max-w-full rounded-2xl px-11 py-4 text-center text-base ltr:ml-0 rtl:mr-0"
                             type="submit"
                         >
                             @lang('marketplace::app.shop.sellers.account.login.button-title')
                         </button>
                     </div>
 
-                    {!! view_render_event('marketplace.seller.account.sign_in.form_controls.after') !!}
+                    <?php // {!! view_render_event('marketplace.seller.account.sign_in.form_controls.after') !!} ?>
                 </x-shop::form>
             </div>
 
@@ -170,7 +199,7 @@
                 @lang('marketplace::app.shop.sellers.account.login.new-seller')
 
                 <a
-                    class="text-navyBlue"
+                    class="text-magentaGoloba"
                     href="{{ route('marketplace.seller.register.create') }}"
                 >
                     @lang('marketplace::app.shop.sellers.account.login.create-your-account')
