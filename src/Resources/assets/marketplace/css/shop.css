@@ -20,7 +20,7 @@
     }
 
     .primary-button {
-        @apply flex px-5 py-2.5 gap-x-1.5 items-center place-content-center font-medium rounded-xl text-white bg-navyBlue border border-navyBlue max-w-max cursor-pointer transition-all hover:opacity-[0.9];
+        @apply flex gap-x-1.5 items-center place-content-center font-medium rounded-xl text-white bg-magentaGoloba border border-magentaGoloba px-8 py-4 max-w-max cursor-pointer transition-all hover:opacity-[0.9];
     }
 
     .secondary-button {
